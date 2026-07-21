@@ -49,10 +49,11 @@ Dapur Kampoeng Raharja membutuhkan sistem digital terintegrasi untuk mengelola o
 
 ### 3.1 Prinsip Utama
 
-1. **Database = single source of truth** untuk seluruh sistem operasional.
+1. **Database = single source of truth** untuk seluruh sistem operasional, di-hosting via **Supabase** (managed PostgreSQL).
 2. **Google Sheets = reporting layer** (append-only, tidak mengontrol sistem).
 3. **Server adalah otoritas untuk data yang dibagikan lintas device** — termasuk penomoran invoice dan status ketersediaan menu final. Client tidak pernah memutuskan hal ini sendiri.
 4. **Offline-first di sisi Kasir App** — transaksi harus tetap bisa dibuat tanpa internet dan tersinkron otomatis saat online kembali.
+5. **Tidak ada infrastruktur lokal untuk database** — Supabase menyediakan Postgres terkelola, auth (opsional, bisa dipertimbangkan menggantikan login sederhana di fase lanjut), dan REST/Realtime API bawaan, sehingga tidak perlu Docker maupun instalasi Postgres native di laptop development.
 
 ### 3.2 Komponen
 
@@ -60,7 +61,7 @@ Dapur Kampoeng Raharja membutuhkan sistem digital terintegrasi untuk mengelola o
 * **Kasir App (Android)** — Next.js + Capacitor, offline-first, create transaksi & update menu.
 * **API (Backend)** — Next.js route/Express, single source of truth.
 * **Sheets Service** — integrasi append-only ke Google Sheets untuk laporan.
-* **Database** — penyimpanan utama seluruh entitas.
+* **Database (Supabase)** — PostgreSQL terkelola (managed), penyimpanan utama seluruh entitas, diakses oleh `services/api` menggunakan Supabase client atau koneksi Postgres langsung.
 
 ### 3.3 High-Level Flow
 

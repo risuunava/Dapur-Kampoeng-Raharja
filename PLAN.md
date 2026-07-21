@@ -55,8 +55,8 @@ Update `package.json` root:
 }
 ```
 
-- [x] Root repo & pnpm workspace siap
-- [x] `.gitignore` dibuat (node_modules, .env, .next, dist, android/app/build)
+- [ ] Root repo & pnpm workspace siap
+- [ ] `.gitignore` dibuat (node_modules, .env, .next, dist, android/app/build)
 
 ---
 
@@ -70,7 +70,7 @@ touch database/schema.sql
 touch .env
 ```
 
-- [x] Struktur folder `apps/`, `services/`, `packages/`, `database/` sesuai PRD.md
+- [ ] Struktur folder `apps/`, `services/`, `packages/`, `database/` sesuai PRD.md
 
 ---
 
@@ -98,7 +98,7 @@ touch lib/api.ts
 cd ../..
 ```
 
-- [x] `apps/web` berhasil dibuat dan bisa `pnpm --filter web dev`
+- [ ] `apps/web` berhasil dibuat dan bisa `pnpm --filter web dev`
 
 ---
 
@@ -176,10 +176,10 @@ touch lib/api.ts lib/local-db.ts lib/sync.ts
 cd ../..
 ```
 
-- [x] `apps/kasir` bisa `npm run build` tanpa error
-- [x] `npx cap sync android` berhasil
-- [x] Folder `android/` muncul di `apps/kasir`
-- [x] Bisa dibuka via `npx cap open android` (butuh Android Studio terpasang)
+- [ ] `apps/kasir` bisa `npm run build` tanpa error
+- [ ] `npx cap sync android` berhasil
+- [ ] Folder `android/` muncul di `apps/kasir`
+- [ ] Bisa dibuka via `npx cap open android` (butuh Android Studio terpasang)
 
 **Catatan:** development sehari-hari untuk UI kasir tetap pakai `next dev` biasa di browser (lebih cepat iterasi). Baru `build → sync → open android` saat mau test perilaku native (misal SQLite plugin, kamera, dsb).
 
@@ -235,7 +235,7 @@ Tambahkan script di `services/api/package.json`:
 }
 ```
 
-- [x] `services/api` bisa `pnpm --filter api dev` dan `/health` merespons
+- [ ] `services/api` bisa `pnpm --filter api dev` dan `/health` merespons
 
 ---
 
@@ -249,7 +249,7 @@ cd services/sheets
 npm init -y
 ```
 
-- [x] Folder `services/sheets` siap (implementasi menyusul di 0.8)
+- [ ] Folder `services/sheets` siap (implementasi menyusul di 0.8)
 
 ---
 
@@ -304,15 +304,55 @@ export interface Transaksi {
 }
 ```
 
-- [x] `packages/types` berisi tipe inti yang bisa diimport `web`, `kasir`, dan `api`
+- [ ] `packages/types` berisi tipe inti yang bisa diimport `web`, `kasir`, dan `api`
 
 ---
 
-### 0.8 Setup Database
+### 0.8 Setup Database — Supabase
 
-Pilih database sesuai kebutuhan hosting nanti (rekomendasi: **PostgreSQL**, karena butuh transaksi ACID untuk idempotency & counter invoice yang aman dari race condition).
+Database di-hosting di **Supabase** (managed PostgreSQL) — tidak install Postgres native maupun Docker di laptop. Development langsung terhubung ke instance Supabase (project gratis/free tier cukup untuk tahap awal).
 
-Isi awal `database/schema.sql`:
+**0.8.1 Buat Project Supabase**
+
+1. Buka [supabase.com](https://supabase.com/), sign up/login (bisa pakai akun GitHub).
+2. Klik **New Project**.
+3. Isi:
+   - **Name**: `dapur-kampoeng-raharja`
+   - **Database Password**: generate password kuat, **simpan di password manager** — ini dipakai untuk koneksi langsung (bukan cuma API key).
+   - **Region**: pilih yang paling dekat dengan target user, misal Singapore (paling dekat ke Indonesia).
+4. Tunggu beberapa menit sampai project selesai provisioning.
+
+- [ ] Project Supabase aktif (buat di https://supabase.com, namai `dapur-kampoeng-raharja`)
+
+**0.8.2 Ambil Kredensial**
+
+Di dashboard project → **Project Settings → API**:
+- `Project URL` (format `https://xxxxx.supabase.co`)
+- `anon public key` — dipakai untuk akses dari client (kalau nanti Website/Kasir akses langsung ke Supabase) atau `service_role key` — dipakai khusus di backend (`services/api`), **jangan pernah expose ke client**, karena key ini bisa bypass Row Level Security.
+
+Di **Project Settings → Database**:
+- `Connection string` (URI) — dipakai kalau `services/api` konek langsung pakai driver Postgres biasa (misal `pg` atau ORM seperti Prisma/Drizzle) alih-alih Supabase client library.
+
+- [x] Template `.env` sudah disiapkan dengan placeholder — isi sendiri dengan kredensial dari dashboard Supabase
+
+**0.8.3 Isi `.env`**
+
+```
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<service_role_key, hanya dipakai di services/api, JANGAN expose ke client>
+SUPABASE_ANON_KEY=<anon_key, aman dipakai di client kalau perlu>
+DATABASE_URL=postgresql://postgres:<password>@db.xxxxx.supabase.co:5432/postgres
+```
+
+Pastikan `.env` sudah masuk `.gitignore` sebelum isi apapun.
+
+- [ ] `.env` sudah diisi kredensial nyata (bukan placeholder) dan tidak ter-track git
+
+**0.8.4 Buat Schema Lewat SQL Editor Supabase**
+
+Supabase punya **SQL Editor** bawaan di dashboard — schema bisa dijalankan langsung dari sana tanpa butuh koneksi database lokal.
+
+Isi `database/schema.sql` (disimpan di repo sebagai source of truth, lalu dijalankan manual di SQL Editor Supabase untuk saat ini; migration tool otomatis bisa ditambahkan belakangan lewat Supabase CLI kalau tim bertambah):
 
 ```sql
 CREATE TABLE menu (
@@ -351,18 +391,52 @@ CREATE TABLE invoice_counter (
 );
 ```
 
-- [x] `database/schema.sql` mencakup tabel `menu`, `users`, `transaksi`, `invoice_counter`
-- [ ] Database lokal (Postgres via install langsung) bisa menjalankan schema ini
+Cara menjalankan: buka dashboard Supabase → **SQL Editor** → **New query** → paste isi `schema.sql` → **Run**.
+
+- [ ] Semua tabel berhasil dibuat (jalan `database/schema.sql` lewat SQL Editor Supabase)
+
+**0.8.5 Row Level Security (RLS) — Penting untuk Supabase**
+
+Supabase secara default mengekspos tabel lewat REST API otomatis (PostgREST). Kalau RLS tidak diaktifkan, tabel bisa diakses siapa saja yang punya `anon key` (yang tertanam di client-side kalau Website/Kasir akses langsung).
+
+Untuk arsitektur project ini (di mana `services/api` adalah satu-satunya pintu masuk resmi ke database, sesuai prinsip "Server adalah otoritas" di PRD.md), rekomendasinya:
+
+- [ ] Aktifkan **RLS** di semua tabel (`Table Editor` → pilih tabel → toggle **Enable RLS**)
+- [ ] **Jangan buat policy publik** untuk `anon key` di tabel `transaksi`, `users`, `invoice_counter`
+
+**0.8.6 Install Client Library di `services/api`**
+
+```bash
+cd services/api
+npm install @supabase/supabase-js
+```
+
+Buat `services/api/lib/supabase.ts`:
+
+```ts
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+export const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // service_role, hanya dipakai di backend
+);
+```
+
+- [x] `@supabase/supabase-js` terinstall + `lib/supabase.ts` sudah dibuat
+- [ ] Test koneksi: `supabase.from('menu').select('*')` return array kosong tanpa error (jalankan setelah `.env` diisi)
 
 ---
 
 ### 0.9 Verifikasi Phase 0 Selesai
 
-- [x] `pnpm install` di root berhasil tanpa error untuk semua workspace
-- [x] `apps/web` jalan di browser (`pnpm --filter web dev`)
-- [x] `apps/kasir` jalan di browser (`pnpm --filter kasir dev`) dan bisa di-build untuk Capacitor
-- [x] `services/api` merespons di `/health`
-- [x] Struktur folder 100% cocok dengan diagram di PRD.md bagian 7
+- [ ] `pnpm install` di root berhasil tanpa error untuk semua workspace
+- [ ] `apps/web` jalan di browser (`pnpm --filter web dev`)
+- [ ] `apps/kasir` jalan di browser (`pnpm --filter kasir dev`) dan bisa di-build untuk Capacitor
+- [ ] `services/api` merespons di `/health`
+- [ ] Struktur folder 100% cocok dengan diagram di PRD.md bagian 7
 
 ---
 

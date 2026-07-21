@@ -57,8 +57,9 @@ npx cap open android         # butuh Android Studio
 pnpm --filter <workspace> lint
 pnpm --filter <workspace> type-check   # jika script tersedia
 
-# Database
-psql -f database/schema.sql <nama_db>  # apply schema lokal
+# Database (Supabase — tidak ada database lokal)
+# Jalankan isi database/schema.sql lewat SQL Editor di dashboard Supabase project.
+# Koneksi & kredensial ada di .env (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, DATABASE_URL) — lihat PLAN.md 0.8.
 ```
 
 Kalau sebuah workspace belum punya script tertentu (`lint`, `test`, dst), cek `package.json` workspace itu dulu sebelum asumsi command generik.
@@ -128,7 +129,9 @@ Area-area ini sudah melalui diskusi desain matang di PRD.md/PLAN.md — **jangan
 - ❌ **Jangan generate invoice number di client/Kasir App.** Invoice final selalu digenerate server-side lewat `invoice_counter` (lihat PLAN.md 2.4). Client hanya boleh pakai UUID sebagai id sementara.
 - ❌ **Jangan buat endpoint transaksi baru tanpa idempotency check** berbasis UUID. Setiap `POST /transaksi` wajib cek id yang sudah ada dulu sebelum insert.
 - ❌ **Jangan blocking response kasir demi menunggu Google Sheets API.** Sync ke Sheets selalu async dan terpisah dari status `synced_db` (lihat PLAN.md 1b.8).
-- ❌ **Jangan commit credentials** (`GOOGLE_SHEETS_PRIVATE_KEY`, file JSON service account, `.env` apapun).
+- ❌ **Jangan commit credentials** (`GOOGLE_SHEETS_PRIVATE_KEY`, file JSON service account, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `.env` apapun).
+- ❌ **Jangan expose `SUPABASE_SERVICE_ROLE_KEY` ke client** (`apps/web`, `apps/kasir`). Key ini hanya boleh dipakai di `services/api` karena bisa bypass Row Level Security.
+- ❌ **Jangan menonaktifkan RLS** di tabel `transaksi`, `users`, `invoice_counter` tanpa mendiskusikan dulu (lihat PLAN.md 0.8.5).
 - ✅ **Selalu update `sync_status` lewat state machine yang sudah didefinisikan**: `pending → syncing → synced_db → synced_sheets`, atau `failed`. Jangan tambah status baru tanpa update `packages/types`.
 - ✅ **Ikuti design token di DESIGN.md** untuk warna/tipografi baru — jangan pakai warna di luar palet tanpa menambahkannya ke token system dulu.
 - ✅ Saat menyentuh Phase 2 (offline/sync), selalu pertimbangkan skenario: device offline lama, dua device sync bersamaan, retry saat server down.
