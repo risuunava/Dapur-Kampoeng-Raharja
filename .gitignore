@@ -4,5 +4,7 @@ dist
 out
 .env
 *.local
+package-lock.json
+yarn.lock
 android/app/build
 .capacitor

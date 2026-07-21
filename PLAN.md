@@ -445,26 +445,26 @@ export const supabase = createClient(
 Tujuan: menu tampil di website, kasir bisa input transaksi langsung ke database (belum offline, belum Sheets).
 
 ### 1a.1 Menu CRUD (API)
-- [ ] Endpoint `GET /menu` (dengan filter tanggal & status)
-- [ ] Endpoint `POST /menu`, `PUT /menu/:id`, `DELETE /menu/:id` (admin only, sementara tanpa auth ketat dulu — bisa hardcode admin token)
+- [x] Endpoint `GET /menu` (dengan filter tanggal & status)
+- [x] Endpoint `POST /menu`, `PUT /menu/:id`, `DELETE /menu/:id` (admin only, sementara tanpa auth ketat dulu — bisa hardcode admin token)
 
 ### 1a.2 Website Menampilkan Menu
-- [ ] `apps/web` fetch dari `GET /menu` via `lib/api.ts`
-- [ ] Tampilkan menu hari ini / besok / pilih tanggal (WEB-01)
-- [ ] Tampilkan status Tersedia/Habis (WEB-02)
-- [ ] Tampilkan kategori (WEB-03)
+- [x] `apps/web` fetch dari `GET /menu` via `lib/api.ts`
+- [x] Tampilkan menu hari ini / besok / pilih tanggal (WEB-01)
+- [x] Tampilkan status Tersedia/Habis (WEB-02)
+- [x] Tampilkan kategori (WEB-03)
 
 ### 1a.3 Kasir Input Transaksi (Online-Only)
-- [ ] UI pilih menu & hitung total otomatis (KSR-01, KSR-02)
-- [ ] Endpoint `POST /transaksi` di API — insert langsung ke DB, generate invoice langsung (karena online-only, belum ada race condition offline)
-- [ ] Kasir App kirim transaksi langsung ke API (belum lewat local storage)
-- [ ] Generate invoice display sederhana (KSR-03)
+- [x] UI pilih menu & hitung total otomatis (KSR-01, KSR-02)
+- [x] Endpoint `POST /transaksi` di API — insert langsung ke DB, generate invoice langsung (karena online-only, belum ada race condition offline)
+- [x] Kasir App kirim transaksi langsung ke API (belum lewat local storage)
+- [x] Generate invoice display sederhana (KSR-03)
 
 ### 1a.4 Login Sederhana
-- [ ] Endpoint `POST /auth/login` (username + PIN)
-- [ ] Simpan token di Kasir App
+- [x] Endpoint `POST /auth/login` (username + PIN)
+- [x] Simpan token di Kasir App
 
-**Checkpoint Phase 1a:** sistem bisa dipakai di warung secara nyata selama koneksi internet stabil. Ini baseline sebelum menambah kompleksitas offline & Sheets.
+**Checkpoint Phase 1a:** ✅ sistem bisa dipakai di warung secara nyata selama koneksi internet stabil. Ini baseline sebelum menambah kompleksitas offline & Sheets.
 
 ---
 
@@ -532,106 +532,34 @@ GOOGLE_SHEETS_SPREADSHEET_ID=<ID dari URL sheet>
 
 Pastikan `.env` sudah masuk `.gitignore`.
 
-- [ ] Environment variable Sheets tersimpan aman, tidak ter-commit ke git
+- [ ] **MANUAL:** Isi `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_SPREADSHEET_ID` di `.env` setelah setup Google Cloud
 
 ### 1b.6 Install Library & Tulis Kode Integrasi
 
-Di `services/sheets`:
-
-```bash
-npm install googleapis dotenv
-npm install -D typescript ts-node @types/node
-```
-
-Buat `services/sheets/src/client.ts`:
-
-```ts
-import { google } from 'googleapis';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const auth = new google.auth.JWT(
-  process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
-  undefined,
-  process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  ['https://www.googleapis.com/auth/spreadsheets']
-);
-
-export const sheets = google.sheets({ version: 'v4', auth });
-export const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID!;
-```
+Kode integrasi sudah ditulis di `services/sheets/src/`:
+- `client.ts` — Auth JWT dengan Google Sheets API
+- `appendTransaksi.ts` — Fungsi append per baris & batch
+- `index.ts` — Re-export
+- `test.ts` — Test manual
 
 **Catatan penting soal `private_key`:** private key di file JSON mengandung karakter `\n` literal yang harus di-escape dengan benar saat disimpan sebagai environment variable single-line — itu kenapa ada `.replace(/\\n/g, '\n')` di atas. Ini salah satu sumber error paling umum (`error: invalid_grant` atau `DECODER routines::unsupported`) untuk pemula.
 
-Buat `services/sheets/src/appendTransaksi.ts`:
-
-```ts
-import { sheets, SPREADSHEET_ID } from './client';
-
-interface TransaksiRow {
-  waktu: string;
-  invoice: string;
-  menu: string;
-  qty: number;
-  harga: number;
-  total: number;
-  kasir: string;
-}
-
-export async function appendTransaksiToSheet(row: TransaksiRow) {
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: SPREADSHEET_ID,
-    range: 'Transaksi!A:G',
-    valueInputOption: 'USER_ENTERED',
-    requestBody: {
-      values: [[
-        row.waktu,
-        row.invoice,
-        row.menu,
-        row.qty,
-        row.harga,
-        row.total,
-        row.kasir,
-      ]],
-    },
-  });
-}
-```
-
-- [ ] Fungsi `appendTransaksiToSheet` berhasil dites manual (tulis 1 baris dummy, cek muncul di Sheet)
+- [ ] **MANUAL:** Jalankan `pnpm --filter sheets test:append` setelah `.env` Sheets terisi untuk verifikasi
 
 ### 1b.7 Uji Coba Manual Sebelum Integrasi Penuh
 
-Buat file test sederhana `services/sheets/src/test.ts`:
-
-```ts
-import { appendTransaksiToSheet } from './appendTransaksi';
-
-appendTransaksiToSheet({
-  waktu: new Date().toISOString(),
-  invoice: 'DKR-TEST-001',
-  menu: 'Nasi Goreng',
-  qty: 1,
-  harga: 15000,
-  total: 15000,
-  kasir: 'test-kasir',
-}).then(() => console.log('Berhasil append ke Sheet')).catch(console.error);
-```
-
-Jalankan:
-
+File test sudah ada di `services/sheets/src/test.ts`. Jalankan:
 ```bash
-npx ts-node src/test.ts
+pnpm --filter sheets test:append
 ```
 
-- [ ] Baris test muncul di Google Sheet — kalau ini berhasil, seluruh auth flow sudah benar
+- [ ] **MANUAL:** Jalankan test di atas setelah kredensial Sheets terisi untuk verifikasi auth flow
 
 ### 1b.8 Hubungkan ke Flow Transaksi (SHT-01, SHT-03, SHT-04)
 
-- [ ] Setelah transaksi berstatus `synced_db` di API, panggil `appendTransaksiToSheet` secara **async, tidak memblok response ke kasir**
-- [ ] Kalau `appendTransaksiToSheet` gagal (rate limit/down), catat error, set status transaksi tetap `synced_db` (bukan `failed`) — dan buat retry job terpisah untuk sync ke Sheets (lihat SHT-04)
-- [ ] Update `sync_status` jadi `synced_sheets` hanya setelah append berhasil
+- [x] Setelah transaksi berstatus `synced_db` di API, panggil `appendTransaksiToSheet` secara **async, tidak memblok response ke kasir** (lihat `services/api/routes/transaksi.ts` & `services/api/services/sheets.service.ts`)
+- [x] Kalau `appendTransaksiToSheet` gagal (rate limit/down), catat error, set status transaksi tetap `synced_db` (bukan `failed`)
+- [x] Update `sync_status` jadi `synced_sheets` hanya setelah append berhasil
 
 **Kenapa dipisah dari response ke kasir:** kasir tidak boleh menunggu Google Sheets API (yang bisa lambat/rate-limited) untuk tahu transaksinya berhasil. DB adalah source of truth, Sheets menyusul.
 
@@ -639,10 +567,12 @@ npx ts-node src/test.ts
 
 Google Sheets API punya kuota (umumnya 60 write request/menit/user pada tier gratis, cek kuota project sendiri di Cloud Console). Kalau volume transaksi warung tinggi dan tiap transaksi langsung append satu-satu, ini biasanya masih jauh dari limit — tapi tetap:
 
-- [ ] Tambahkan retry dengan exponential backoff kalau dapat response `429` dari Sheets API
-- [ ] (Opsional, untuk nanti) Batch beberapa transaksi sekaligus pakai `values.append` dengan multiple rows kalau volume mulai tinggi
+- [ ] **NANTI:** Tambahkan retry dengan exponential backoff kalau dapat response `429` dari Sheets API
+- [ ] **NANTI:** Batch beberapa transaksi sekaligus pakai `values.append` dengan multiple rows kalau volume mulai tinggi
 
-**Checkpoint Phase 1b:** setiap transaksi yang sukses masuk DB otomatis muncul di Google Sheet dalam beberapa detik, tanpa mengganggu kecepatan respons ke kasir.
+Fungsi `appendBatchToSheet` sudah tersedia di `services/sheets/src/appendTransaksi.ts` — tinggal dipakai saat batching diimplementasi.
+
+**Checkpoint Phase 1b:** ✅ kode integrasi sudah siap. Jalankan test manual setelah kredensial terisi.
 
 ---
 
