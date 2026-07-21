@@ -322,7 +322,7 @@ Database di-hosting di **Supabase** (managed PostgreSQL) — tidak install Postg
    - **Region**: pilih yang paling dekat dengan target user, misal Singapore (paling dekat ke Indonesia).
 4. Tunggu beberapa menit sampai project selesai provisioning.
 
-- [ ] Project Supabase aktif (buat di https://supabase.com, namai `dapur-kampoeng-raharja`)
+- [x] Project Supabase aktif (buat di https://supabase.com, namai `dapur-kampoeng-raharja`)
 
 **0.8.2 Ambil Kredensial**
 
@@ -346,7 +346,7 @@ DATABASE_URL=postgresql://postgres:<password>@db.xxxxx.supabase.co:5432/postgres
 
 Pastikan `.env` sudah masuk `.gitignore` sebelum isi apapun.
 
-- [ ] `.env` sudah diisi kredensial nyata (bukan placeholder) dan tidak ter-track git
+- [x] `.env` sudah diisi kredensial nyata (bukan placeholder) dan tidak ter-track git
 
 **0.8.4 Buat Schema Lewat SQL Editor Supabase**
 
@@ -393,7 +393,7 @@ CREATE TABLE invoice_counter (
 
 Cara menjalankan: buka dashboard Supabase → **SQL Editor** → **New query** → paste isi `schema.sql` → **Run**.
 
-- [ ] Semua tabel berhasil dibuat (jalan `database/schema.sql` lewat SQL Editor Supabase)
+- [x] Semua tabel berhasil dibuat (jalan `database/schema.sql` lewat SQL Editor Supabase)
 
 **0.8.5 Row Level Security (RLS) — Penting untuk Supabase**
 
@@ -401,8 +401,8 @@ Supabase secara default mengekspos tabel lewat REST API otomatis (PostgREST). Ka
 
 Untuk arsitektur project ini (di mana `services/api` adalah satu-satunya pintu masuk resmi ke database, sesuai prinsip "Server adalah otoritas" di PRD.md), rekomendasinya:
 
-- [ ] Aktifkan **RLS** di semua tabel (`Table Editor` → pilih tabel → toggle **Enable RLS**)
-- [ ] **Jangan buat policy publik** untuk `anon key` di tabel `transaksi`, `users`, `invoice_counter`
+- [x] Aktifkan **RLS** di semua tabel (`Table Editor` → pilih tabel → toggle **Enable RLS**)
+- [x] **Jangan buat policy publik** untuk `anon key` di tabel `transaksi`, `users`, `invoice_counter`
 
 **0.8.6 Install Client Library di `services/api`**
 
@@ -426,17 +426,17 @@ export const supabase = createClient(
 ```
 
 - [x] `@supabase/supabase-js` terinstall + `lib/supabase.ts` sudah dibuat
-- [ ] Test koneksi: `supabase.from('menu').select('*')` return array kosong tanpa error (jalankan setelah `.env` diisi)
+- [x] Test koneksi: `supabase.from('menu').select('*')` return array kosong tanpa error
 
 ---
 
 ### 0.9 Verifikasi Phase 0 Selesai
 
-- [ ] `pnpm install` di root berhasil tanpa error untuk semua workspace
-- [ ] `apps/web` jalan di browser (`pnpm --filter web dev`)
-- [ ] `apps/kasir` jalan di browser (`pnpm --filter kasir dev`) dan bisa di-build untuk Capacitor
-- [ ] `services/api` merespons di `/health`
-- [ ] Struktur folder 100% cocok dengan diagram di PRD.md bagian 7
+- [x] `pnpm install` di root berhasil tanpa error untuk semua workspace
+- [x] `apps/web` jalan di browser (`pnpm --filter web dev`)
+- [x] `apps/kasir` jalan di browser (`pnpm --filter kasir dev`) dan bisa di-build untuk Capacitor
+- [x] `services/api` merespons di `/health`
+- [x] Struktur folder 100% cocok dengan diagram di PRD.md bagian 7
 
 ---
 

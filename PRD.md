@@ -270,4 +270,4 @@ Hal-hal berikut perlu keputusan final sebelum/selama Phase 1b–2:
 * 0 transaksi hilang dalam simulasi offline selama X hari operasional.
 * Website load time < 2 detik.
 * Laporan Sheets ter-update maksimal dalam Y menit setelah transaksi `synced_db` (saat online normal).
-* Kasir bisa menyelesaikan 1 transaksi dalam < 30 detik (UX kecepatan input).
+* Kasir bisa menyelesaikan 1 transaksi dalam < 30 detik (UX kecepatan input). 
