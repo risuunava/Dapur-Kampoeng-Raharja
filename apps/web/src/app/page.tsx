@@ -1,65 +1,262 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { getMenu, getCategories, MenuItem } from "../../lib/api";
+import { formatRupiah } from "@dapur-kampoeng/utils";
+
+function formatDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function todayString(): string {
+  return formatDate(new Date());
+}
+
+function yesterdayString(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return formatDate(d);
+}
+
+function tomorrowString(): string {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return formatDate(d);
+}
+
+function labelDate(dateStr: string): string {
+  const today = todayString();
+  const yesterday = yesterdayString();
+  const tomorrow = tomorrowString();
+  if (dateStr === today) return "Hari ini";
+  if (dateStr === yesterday) return "Kemarin";
+  if (dateStr === tomorrow) return "Besok";
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+}
 
 export default function Home() {
+  const [menu, setMenu] = useState<MenuItem[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState(todayString());
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchMenu = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    const result = await getMenu({ date: selectedDate });
+    if (result.error) {
+      setError(result.error);
+      setMenu([]);
+    } else {
+      setMenu(result.data || []);
+    }
+    setLoading(false);
+  }, [selectedDate]);
+
+  useEffect(() => {
+    fetchMenu();
+  }, [fetchMenu]);
+
+  useEffect(() => {
+    getCategories().then((cats) => setCategories(cats));
+  }, []);
+
+  const filtered = selectedCategory
+    ? menu.filter((m) => m.category === selectedCategory)
+    : menu;
+
+  const recommended = filtered.filter((m) => m.status === "tersedia").slice(0, 2);
+
+  const datePresets = [
+    { label: "Kemarin", value: yesterdayString() },
+    { label: "Hari ini", value: todayString() },
+    { label: "Besok", value: tomorrowString() },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-bg">
+      <header className="bg-forest-dark text-white px-4 py-6">
+        <h1
+          className="text-2xl font-semibold mb-1"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Dapur Kampoeng Raharja
+        </h1>
+        <p className="text-sm text-white/80">Menu hari ini</p>
+        <div className="mt-1 flex items-center gap-2">
+          <span className="inline-block w-2 h-2 rounded-full bg-green-400" />
+          <span className="text-xs text-white/70">
+            {loading ? "Memuat..." : ` ${menu.length} menu`}
+          </span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <main className="px-4 py-4 max-w-2xl mx-auto">
+        <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
+          {datePresets.map((p) => (
+            <button
+              key={p.value}
+              onClick={() => setSelectedDate(p.value)}
+              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors duration-180 ${
+                selectedDate === p.value
+                  ? "bg-turmeric text-forest-dark"
+                  : "bg-surface text-muted border border-line hover:border-turmeric"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="px-3 py-2 rounded-full text-sm border border-line bg-surface text-ink cursor-pointer"
+          />
         </div>
+
+        {categories.length > 0 && (
+          <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+            <button
+              onClick={() => setSelectedCategory("")}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors duration-180 ${
+                !selectedCategory
+                  ? "bg-forest text-white"
+                  : "bg-surface text-muted border border-line"
+              }`}
+            >
+              Semua
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors duration-180 ${
+                  selectedCategory === cat
+                    ? "bg-forest text-white"
+                    : "bg-surface text-muted border border-line"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-chili mb-2">{error}</p>
+            <button
+              onClick={fetchMenu}
+              className="px-4 py-2 rounded-full bg-turmeric text-forest-dark text-sm font-medium"
+            >
+              Coba lagi
+            </button>
+          </div>
+        )}
+
+        {!error && loading && (
+          <div className="text-center py-12 text-muted">Memuat menu...</div>
+        )}
+
+        {!error && !loading && filtered.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted mb-2">
+              Menu hari ini belum diunggah. Coba cek lagi nanti, atau lihat menu kemarin.
+            </p>
+            <button
+              onClick={() => setSelectedDate(yesterdayString())}
+              className="px-4 py-2 rounded-full bg-turmeric text-forest-dark text-sm font-medium"
+            >
+              Lihat menu kemarin
+            </button>
+          </div>
+        )}
+
+        {!error && !loading && recommended.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span>Direkomendasikan</span>
+            </h2>
+            <div className="grid grid-cols-2 gap-3">
+              {recommended.map((item) => (
+                <MenuCard key={item.id} item={item} featured />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!error && !loading && filtered.length > 0 && (
+          <section>
+            {!recommended.length && (
+              <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">
+                Semua Menu
+              </h2>
+            )}
+            <div className="space-y-2">
+              {filtered.map((item) => (
+                <MenuCard key={item.id} item={item} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
+    </div>
+  );
+}
+
+function MenuCard({ item, featured }: { item: MenuItem; featured?: boolean }) {
+  const isHabis = item.status === "habis";
+
+  return (
+    <div
+      className={`relative bg-surface rounded-md overflow-hidden transition-shadow duration-180 ${
+        featured ? "shadow-card" : "shadow-card"
+      }`}
+      style={{ boxShadow: "var(--shadow-card)" }}
+    >
+      <div className="p-4">
+        <div className="flex items-start justify-between">
+          <div className="flex-1 min-w-0">
+            <h3
+              className={`font-semibold truncate ${
+                featured ? "text-base" : "text-base"
+              } ${isHabis ? "text-muted" : "text-ink"}`}
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              {item.name}
+            </h3>
+            <p className="text-sm font-bold text-ink mt-1" style={{ fontVariantNumeric: "tabular-nums" }}>
+              {formatRupiah(item.price)}
+            </p>
+          </div>
+        </div>
+        <div className="mt-2">
+          {isHabis ? (
+            <span className="inline-block text-xs font-medium text-chili bg-chili/10 px-2 py-0.5 rounded">
+              Habis
+            </span>
+          ) : (
+            <span className="inline-block text-xs font-medium text-forest bg-forest/10 px-2 py-0.5 rounded">
+              Tersedia
+            </span>
+          )}
+        </div>
+        {featured && !isHabis && (
+          <div className="mt-2 h-0.5 w-12 rounded-full bg-turmeric" />
+        )}
+      </div>
+      {isHabis && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(179,58,46,0.06) 8px, rgba(179,58,46,0.06) 10px)",
+          }}
+        />
+      )}
     </div>
   );
 }
