@@ -6,6 +6,9 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 import { supabase } from './lib/supabase';
+import menuRoutes from './routes/menu';
+import transaksiRoutes from './routes/transaksi';
+import authRoutes from './routes/auth';
 
 const app = express();
 app.use(cors());
@@ -25,6 +28,10 @@ app.get('/health/db', async (_req, res) => {
     res.status(500).json({ status: 'error', message });
   }
 });
+
+app.use('/menu', menuRoutes);
+app.use('/transaksi', transaksiRoutes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));
