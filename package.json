@@ -1,0 +1,9 @@
+{
+  "name": "dapur-kampoeng",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:kasir": "pnpm --filter kasir dev",
+    "dev:api": "pnpm --filter api dev"
+  }
+}
