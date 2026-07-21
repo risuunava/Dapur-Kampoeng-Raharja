@@ -532,7 +532,7 @@ GOOGLE_SHEETS_SPREADSHEET_ID=<ID dari URL sheet>
 
 Pastikan `.env` sudah masuk `.gitignore`.
 
-- [ ] **MANUAL:** Isi `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_SPREADSHEET_ID` di `.env` setelah setup Google Cloud
+- [x] Isi `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_SPREADSHEET_ID` di `.env` — sudah terisi dan terverifikasi
 
 ### 1b.6 Install Library & Tulis Kode Integrasi
 
@@ -544,7 +544,7 @@ Kode integrasi sudah ditulis di `services/sheets/src/`:
 
 **Catatan penting soal `private_key`:** private key di file JSON mengandung karakter `\n` literal yang harus di-escape dengan benar saat disimpan sebagai environment variable single-line — itu kenapa ada `.replace(/\\n/g, '\n')` di atas. Ini salah satu sumber error paling umum (`error: invalid_grant` atau `DECODER routines::unsupported`) untuk pemula.
 
-- [ ] **MANUAL:** Jalankan `pnpm --filter sheets test:append` setelah `.env` Sheets terisi untuk verifikasi
+- [x] Test `pnpm --filter sheets test:append` berhasil — data dummy masuk ke Sheet
 
 ### 1b.7 Uji Coba Manual Sebelum Integrasi Penuh
 
@@ -553,7 +553,7 @@ File test sudah ada di `services/sheets/src/test.ts`. Jalankan:
 pnpm --filter sheets test:append
 ```
 
-- [ ] **MANUAL:** Jalankan test di atas setelah kredensial Sheets terisi untuk verifikasi auth flow
+- [x] Test manual berhasil — auth flow Google Sheets berfungsi
 
 ### 1b.8 Hubungkan ke Flow Transaksi (SHT-01, SHT-03, SHT-04)
 
@@ -572,7 +572,7 @@ Google Sheets API punya kuota (umumnya 60 write request/menit/user pada tier gra
 
 Fungsi `appendBatchToSheet` sudah tersedia di `services/sheets/src/appendTransaksi.ts` — tinggal dipakai saat batching diimplementasi.
 
-**Checkpoint Phase 1b:** ✅ kode integrasi sudah siap. Jalankan test manual setelah kredensial terisi.
+**Checkpoint Phase 1b:** ✅ integrasi Google Sheets berfungsi — transaksi yang masuk DB otomatis append ke Sheet tanpa memblok response kasir.
 
 ---
 
