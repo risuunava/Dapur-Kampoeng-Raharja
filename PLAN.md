@@ -55,8 +55,8 @@ Update `package.json` root:
 }
 ```
 
-- [ ] Root repo & pnpm workspace siap
-- [ ] `.gitignore` dibuat (node_modules, .env, .next, dist, android/app/build)
+- [x] Root repo & pnpm workspace siap
+- [x] `.gitignore` dibuat (node_modules, .env, .next, dist, android/app/build)
 
 ---
 
@@ -70,7 +70,7 @@ touch database/schema.sql
 touch .env
 ```
 
-- [ ] Struktur folder `apps/`, `services/`, `packages/`, `database/` sesuai PRD.md
+- [x] Struktur folder `apps/`, `services/`, `packages/`, `database/` sesuai PRD.md
 
 ---
 
@@ -98,7 +98,7 @@ touch lib/api.ts
 cd ../..
 ```
 
-- [ ] `apps/web` berhasil dibuat dan bisa `pnpm --filter web dev`
+- [x] `apps/web` berhasil dibuat dan bisa `pnpm --filter web dev`
 
 ---
 
@@ -176,10 +176,10 @@ touch lib/api.ts lib/local-db.ts lib/sync.ts
 cd ../..
 ```
 
-- [ ] `apps/kasir` bisa `npm run build` tanpa error
-- [ ] `npx cap sync android` berhasil
-- [ ] Folder `android/` muncul di `apps/kasir`
-- [ ] Bisa dibuka via `npx cap open android` (butuh Android Studio terpasang)
+- [x] `apps/kasir` bisa `npm run build` tanpa error
+- [x] `npx cap sync android` berhasil
+- [x] Folder `android/` muncul di `apps/kasir`
+- [x] Bisa dibuka via `npx cap open android` (butuh Android Studio terpasang)
 
 **Catatan:** development sehari-hari untuk UI kasir tetap pakai `next dev` biasa di browser (lebih cepat iterasi). Baru `build → sync → open android` saat mau test perilaku native (misal SQLite plugin, kamera, dsb).
 
@@ -235,7 +235,7 @@ Tambahkan script di `services/api/package.json`:
 }
 ```
 
-- [ ] `services/api` bisa `pnpm --filter api dev` dan `/health` merespons
+- [x] `services/api` bisa `pnpm --filter api dev` dan `/health` merespons
 
 ---
 
@@ -249,7 +249,7 @@ cd services/sheets
 npm init -y
 ```
 
-- [ ] Folder `services/sheets` siap (implementasi menyusul di 0.8)
+- [x] Folder `services/sheets` siap (implementasi menyusul di 0.8)
 
 ---
 
@@ -304,7 +304,7 @@ export interface Transaksi {
 }
 ```
 
-- [ ] `packages/types` berisi tipe inti yang bisa diimport `web`, `kasir`, dan `api`
+- [x] `packages/types` berisi tipe inti yang bisa diimport `web`, `kasir`, dan `api`
 
 ---
 
@@ -351,18 +351,18 @@ CREATE TABLE invoice_counter (
 );
 ```
 
-- [ ] `database/schema.sql` mencakup tabel `menu`, `users`, `transaksi`, `invoice_counter`
-- [ ] Database lokal (Postgres via Docker atau install langsung) bisa menjalankan schema ini
+- [x] `database/schema.sql` mencakup tabel `menu`, `users`, `transaksi`, `invoice_counter`
+- [ ] Database lokal (Postgres via install langsung) bisa menjalankan schema ini
 
 ---
 
 ### 0.9 Verifikasi Phase 0 Selesai
 
-- [ ] `pnpm install` di root berhasil tanpa error untuk semua workspace
-- [ ] `apps/web` jalan di browser (`pnpm --filter web dev`)
-- [ ] `apps/kasir` jalan di browser (`pnpm --filter kasir dev`) dan bisa di-build untuk Capacitor
-- [ ] `services/api` merespons di `/health`
-- [ ] Struktur folder 100% cocok dengan diagram di PRD.md bagian 7
+- [x] `pnpm install` di root berhasil tanpa error untuk semua workspace
+- [x] `apps/web` jalan di browser (`pnpm --filter web dev`)
+- [x] `apps/kasir` jalan di browser (`pnpm --filter kasir dev`) dan bisa di-build untuk Capacitor
+- [x] `services/api` merespons di `/health`
+- [x] Struktur folder 100% cocok dengan diagram di PRD.md bagian 7
 
 ---
 
