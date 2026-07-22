@@ -630,11 +630,14 @@ Tujuan: Kasir App bisa bikin transaksi tanpa internet dan sync otomatis saat onl
 
 ## Phase 3 — Owner Tools
 
-- [ ] Dashboard sederhana: total transaksi hari ini, menu terlaris
-- [ ] Analytics dasar (grafik penjualan per kategori/waktu)
-- [ ] Best seller report
+- [x] API endpoint `GET /dashboard/summary` — total transaksi & pendapatan hari ini + bulan ini
+- [x] API endpoint `GET /dashboard/best-seller` — menu terlaris berdasarkan qty terjual
+- [x] API endpoint `GET /dashboard/category-sales` — penjualan per kategori
+- [x] API endpoint `GET /dashboard/daily-trend` — grafik penjualan 7/30 hari
+- [x] Dashboard view di Kasir App — summary cards, bar chart tren, best-seller, kategori
+- [x] Navigasi dashboard hanya muncul untuk role admin
 
-*(Detail teknis Phase 3 akan diperluas setelah Phase 1–2 stabil dan dipakai nyata di warung, supaya kebutuhan dashboard didasarkan pada data & feedback owner yang sesungguhnya.)*
+**Checkpoint Phase 3:** owner bisa lihat total transaksi hari ini, menu terlaris, grafik tren 7 hari, dan breakdown kategori — langsung dari perangkat kasir.*
 
 ---
 

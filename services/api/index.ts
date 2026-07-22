@@ -9,6 +9,7 @@ import { supabase } from './lib/supabase';
 import menuRoutes from './routes/menu';
 import transaksiRoutes from './routes/transaksi';
 import authRoutes from './routes/auth';
+import dashboardRoutes from './routes/dashboard';
 
 const app = express();
 app.use(cors());
@@ -32,6 +33,7 @@ app.get('/health/db', async (_req, res) => {
 app.use('/menu', menuRoutes);
 app.use('/transaksi', transaksiRoutes);
 app.use('/auth', authRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));

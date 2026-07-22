@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { login as apiLogin, getMenu } from "../../lib/api";
 import { formatRupiah } from "@dapur-kampoeng/utils";
 import MenuManagement from "../../features/menu/components/MenuManagement";
+import DashboardView from "../../features/dashboard/components/DashboardView";
 import { saveTransaksiLocal } from "../../lib/local-db";
 import { TransaksiLocal } from "../../lib/local-db";
 import { startSyncEngine, stopSyncEngine, subscribe, retryTransaksi } from "../../lib/sync";
 
-type View = "login" | "menu" | "cart" | "receipt" | "management" | "history";
+type View = "login" | "menu" | "cart" | "receipt" | "management" | "history" | "dashboard";
 
 interface UserInfo {
   id: string;
@@ -144,6 +145,14 @@ export default function KasirApp() {
             <span className="text-xs bg-white/15 px-2 py-0.5 rounded">{user.name}</span>
           </div>
           <div className="flex items-center gap-2">
+            {user?.role === "admin" && (
+              <button
+                onClick={() => setView(view === "dashboard" ? "menu" : "dashboard")}
+                className="text-xs text-white/70 hover:text-white transition-colors duration-180"
+              >
+                {view === "dashboard" ? "Transaksi" : "Dashboard"}
+              </button>
+            )}
             <button
               onClick={openHistory}
               className="text-xs text-white/70 hover:text-white transition-colors duration-180"
@@ -208,6 +217,9 @@ export default function KasirApp() {
             onNewTransaction={handleNewTransaction}
             onRetry={receipt.sync_status === 'failed' || receipt.sync_status === 'pending' ? () => retryTransaksi(receipt.id) : undefined}
           />
+        )}
+        {view === "dashboard" && user?.role === "admin" && (
+          <DashboardView onBack={() => setView("menu")} />
         )}
         {view === "history" && user && (
           <HistoryView

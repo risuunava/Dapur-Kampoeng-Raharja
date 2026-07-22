@@ -111,6 +111,56 @@ export async function deleteMenu(id: string): Promise<ApiResponse<null>> {
   return fetchApi<null>(`/menu/${id}`, { method: 'DELETE' });
 }
 
+export interface DashboardSummary {
+  total_transaksi_hari_ini: number;
+  total_pendapatan_hari_ini: number;
+  total_transaksi_bulan_ini: number;
+  total_pendapatan_bulan_ini: number;
+}
+
+export interface BestSellerItem {
+  name: string;
+  qty: number;
+  revenue: number;
+}
+
+export interface CategorySalesItem {
+  category: string;
+  qty: number;
+  revenue: number;
+  percentage: number;
+}
+
+export interface DailyTrendItem {
+  date: string;
+  total: number;
+  count: number;
+}
+
+export async function getDashboardSummary(): Promise<ApiResponse<DashboardSummary>> {
+  return fetchApi<DashboardSummary>('/dashboard/summary');
+}
+
+export async function getBestSeller(limit = 5, start?: string, end?: string): Promise<ApiResponse<BestSellerItem[]>> {
+  const qs = new URLSearchParams();
+  qs.set('limit', String(limit));
+  if (start) qs.set('start', start);
+  if (end) qs.set('end', end);
+  return fetchApi<BestSellerItem[]>(`/dashboard/best-seller?${qs.toString()}`);
+}
+
+export async function getCategorySales(start?: string, end?: string): Promise<ApiResponse<CategorySalesItem[]>> {
+  const qs = new URLSearchParams();
+  if (start) qs.set('start', start);
+  if (end) qs.set('end', end);
+  const query = qs.toString();
+  return fetchApi<CategorySalesItem[]>(`/dashboard/category-sales${query ? `?${query}` : ''}`);
+}
+
+export async function getDailyTrend(days = 7): Promise<ApiResponse<DailyTrendItem[]>> {
+  return fetchApi<DailyTrendItem[]>(`/dashboard/daily-trend?days=${days}`);
+}
+
 export async function createTransaksi(data: {
   id: string;
   items: Array<{ menu_id: string; name: string; qty: number; price: number }>;
