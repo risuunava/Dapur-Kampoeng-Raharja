@@ -431,20 +431,31 @@ function MenuView({
                 key={item.id}
                 onClick={() => addToCart(item)}
                 disabled={isHabis}
-                className={`relative p-3 rounded-sm text-left transition-all duration-180 active:scale-95 ${
+                className={`relative rounded-sm text-left transition-all duration-180 active:scale-95 overflow-hidden ${
                   isHabis
                     ? "bg-surface/50 border border-line/50 opacity-60"
                     : "bg-surface border border-line active:border-turmeric"
                 }`}
-                style={{ minHeight: 80 }}
+                style={{ minHeight: 120 }}
               >
-                <p className="text-sm font-semibold text-ink leading-tight mb-1">{item.name}</p>
+                {(item as { image_url?: string }).image_url && (
+                  <div className="w-full h-20 overflow-hidden bg-bg">
+                    <img
+                      src={(item as { image_url?: string }).image_url}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-2">
+                  <p className="text-sm font-semibold text-ink leading-tight mb-1">{item.name}</p>
                 <p
                   className="text-xs font-bold text-forest"
                   style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                   {formatRupiah(item.price)}
                 </p>
+                </div>
                 {isHabis && (
                   <span className="absolute top-1 right-1 text-[10px] font-medium text-chili">Habis</span>
                 )}

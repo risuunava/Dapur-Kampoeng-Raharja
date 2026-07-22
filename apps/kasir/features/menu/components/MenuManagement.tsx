@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getAllMenu, createMenu, updateMenu, deleteMenu, MenuItem } from "../../../lib/api";
+import { getAllMenu, createMenu, updateMenu, deleteMenu, uploadMenuImage, MenuItem } from "../../../lib/api";
 import { formatRupiah } from "@dapur-kampoeng/utils";
 
 interface MenuForm {
@@ -11,6 +11,7 @@ interface MenuForm {
   start_date: string;
   end_date: string;
   status: "tersedia" | "habis";
+  image_url: string;
 }
 
 const emptyForm: MenuForm = {
@@ -20,6 +21,7 @@ const emptyForm: MenuForm = {
   start_date: "",
   end_date: "",
   status: "tersedia",
+  image_url: "",
 };
 
 export default function MenuManagement({ onBack }: { onBack: () => void }) {
@@ -31,6 +33,8 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
   const [form, setForm] = useState<MenuForm>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
 
   async function fetchMenus() {
     setLoading(true);
@@ -51,6 +55,8 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
   function openAdd() {
     setForm(emptyForm);
     setEditingId(null);
+    setImageFile(null);
+    setImagePreview("");
     setModal("add");
   }
 
@@ -62,8 +68,11 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
       start_date: item.start_date,
       end_date: item.end_date,
       status: item.status,
+      image_url: item.image_url || "",
     });
     setEditingId(item.id);
+    setImageFile(null);
+    setImagePreview(item.image_url || "");
     setModal("edit");
   }
 
@@ -77,6 +86,18 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
       return;
     }
     setSaving(true);
+
+    let imageUrl = form.image_url;
+    if (imageFile) {
+      const uploadResult = await uploadMenuImage(imageFile);
+      if (uploadResult.error) {
+        setError(uploadResult.error);
+        setSaving(false);
+        return;
+      }
+      imageUrl = uploadResult.data.url;
+    }
+
     const payload = {
       name: form.name,
       price: Number(form.price),
@@ -84,6 +105,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
       start_date: form.start_date,
       end_date: form.end_date,
       status: form.status,
+      image_url: imageUrl || null,
     };
 
     let result;
@@ -172,6 +194,11 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                     isHabis ? "border-line/50 opacity-70" : "border-line"
                   }`}
                 >
+                  {item.image_url && (
+                    <div className="w-12 h-12 rounded-sm overflow-hidden shrink-0 border border-line">
+                      <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-ink text-sm truncate">{item.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
@@ -247,6 +274,48 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                   className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
                   placeholder="15000"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs text-muted mb-1">Foto Menu</label>
+                <div className="flex items-center gap-3">
+                  <label className="flex-1 px-3 py-2 rounded-sm border border-line bg-bg text-sm text-muted cursor-pointer hover:border-turmeric transition-colors duration-180">
+                    {imageFile ? imageFile.name : "Pilih Gambar"}
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setImageFile(file);
+                          setImagePreview(URL.createObjectURL(file));
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                  {(imagePreview || form.image_url) && (
+                    <button
+                      onClick={() => {
+                        setImageFile(null);
+                        setImagePreview("");
+                        setForm({ ...form, image_url: "" });
+                      }}
+                      className="text-xs text-chili shrink-0"
+                    >
+                      Hapus
+                    </button>
+                  )}
+                </div>
+                {(imagePreview || form.image_url) && (
+                  <div className="mt-2 w-20 h-20 rounded-sm overflow-hidden border border-line">
+                    <img
+                      src={imagePreview || form.image_url}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>

@@ -8,6 +8,7 @@ export interface MenuItem {
   start_date: string;
   end_date: string;
   status: 'tersedia' | 'habis';
+  image_url?: string | null;
 }
 
 export interface TransaksiData {
@@ -159,6 +160,29 @@ export async function getCategorySales(start?: string, end?: string): Promise<Ap
 
 export async function getDailyTrend(days = 7): Promise<ApiResponse<DailyTrendItem[]>> {
   return fetchApi<DailyTrendItem[]>(`/dashboard/daily-trend?days=${days}`);
+}
+
+const API_URL_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+export async function uploadMenuImage(file: File): Promise<ApiResponse<{ url: string }>> {
+  const token = getToken();
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const res = await fetch(`${API_URL_BASE}/upload/menu`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    const body = await res.json();
+    if (!res.ok) {
+      return { data: null as unknown as { url: string }, error: body.error || `HTTP ${res.status}` };
+    }
+    return body;
+  } catch (err: unknown) {
+    return { data: null as unknown as { url: string }, error: err instanceof Error ? err.message : 'Network error' };
+  }
 }
 
 export async function createTransaksi(data: {
