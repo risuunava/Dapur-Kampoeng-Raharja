@@ -255,6 +255,15 @@ function MenuCard({ item, featured }: { item: MenuItem; featured?: boolean }) {
       }`}
       style={{ boxShadow: "var(--shadow-card)" }}
     >
+      {item.image_url && (
+        <div className="w-full h-36 overflow-hidden bg-bg">
+          <img
+            src={item.image_url}
+            alt={item.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
