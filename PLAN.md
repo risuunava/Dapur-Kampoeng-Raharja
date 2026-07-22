@@ -580,8 +580,8 @@ pnpm --filter sheets test:append
 
 Google Sheets API punya kuota (umumnya 60 write request/menit/user pada tier gratis, cek kuota project sendiri di Cloud Console). Kalau volume transaksi warung tinggi dan tiap transaksi langsung append satu-satu, ini biasanya masih jauh dari limit — tapi tetap:
 
-- [ ] **NANTI:** Tambahkan retry dengan exponential backoff kalau dapat response `429` dari Sheets API
-- [ ] **NANTI:** Batch beberapa transaksi sekaligus pakai `values.append` dengan multiple rows kalau volume mulai tinggi
+- [x] Retry dengan exponential backoff (1s → 2s → 4s, max 3 kali) saat mendapat response 429 dari Sheets API
+- [x] Batch semua item dalam satu transaksi dikirim sekaligus via `appendBatchToSheet`, bukan per-item loop
 
 Fungsi `appendBatchToSheet` sudah tersedia di `services/sheets/src/appendTransaksi.ts` — tinggal dipakai saat batching diimplementasi.
 
