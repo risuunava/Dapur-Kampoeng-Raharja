@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { getMenu, getCategories, MenuItem } from "../../lib/api";
 import { formatRupiah } from "@dapur-kampoeng/utils";
 
@@ -35,6 +35,15 @@ function labelDate(dateStr: string): string {
   return d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 }
 
+function timeAgo(date: Date): string {
+  const diff = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (diff < 10) return "baru saja";
+  if (diff < 60) return `${diff} detik lalu`;
+  const mins = Math.floor(diff / 60);
+  if (mins < 60) return `${mins} menit lalu`;
+  return `${Math.floor(mins / 60)} jam lalu`;
+}
+
 export default function Home() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -42,6 +51,8 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const fetchRef = useRef<() => Promise<void>>(null);
 
   const fetchMenu = useCallback(async () => {
     setLoading(true);
@@ -53,8 +64,13 @@ export default function Home() {
     } else {
       setMenu(result.data || []);
     }
+    setLastUpdated(new Date());
     setLoading(false);
   }, [selectedDate]);
+
+  useEffect(() => {
+    fetchRef.current = fetchMenu;
+  }, [fetchMenu]);
 
   useEffect(() => {
     fetchMenu();
@@ -62,6 +78,24 @@ export default function Home() {
 
   useEffect(() => {
     getCategories().then((cats) => setCategories(cats));
+  }, []);
+
+  useEffect(() => {
+    const poll = setInterval(() => {
+      fetchRef.current?.();
+    }, 30000);
+
+    function onVisible() {
+      if (document.visibilityState === "visible") {
+        fetchRef.current?.();
+      }
+    }
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      clearInterval(poll);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, []);
 
   const filtered = selectedCategory
@@ -89,7 +123,11 @@ export default function Home() {
         <div className="mt-1 flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-green-400" />
           <span className="text-xs text-white/70">
-            {loading ? "Memuat..." : ` ${menu.length} menu`}
+            {loading
+              ? "Memuat..."
+              : lastUpdated
+                ? `${menu.length} menu · diperbarui ${timeAgo(lastUpdated)}`
+                : `${menu.length} menu`}
           </span>
         </div>
       </header>
