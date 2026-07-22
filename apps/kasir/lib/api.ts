@@ -5,8 +5,7 @@ export interface MenuItem {
   name: string;
   price: number;
   category: string;
-  start_date: string;
-  end_date: string;
+  date: string;
   status: 'tersedia' | 'habis';
   image_url?: string | null;
 }
@@ -81,8 +80,7 @@ export async function createMenu(data: {
   name: string;
   price: number;
   category: string;
-  start_date: string;
-  end_date: string;
+  date: string;
   status: 'tersedia' | 'habis';
 }): Promise<ApiResponse<MenuItem>> {
   return fetchApi<MenuItem>('/menu', {
@@ -97,8 +95,7 @@ export async function updateMenu(
     name: string;
     price: number;
     category: string;
-    start_date: string;
-    end_date: string;
+    date: string;
     status: 'tersedia' | 'habis';
   }>
 ): Promise<ApiResponse<MenuItem>> {

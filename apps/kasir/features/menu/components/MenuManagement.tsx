@@ -8,18 +8,20 @@ interface MenuForm {
   name: string;
   price: string;
   category: string;
-  start_date: string;
-  end_date: string;
+  date: string;
   status: "tersedia" | "habis";
   image_url: string;
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
 }
 
 const emptyForm: MenuForm = {
   name: "",
   price: "",
   category: "",
-  start_date: "",
-  end_date: "",
+  date: todayStr(),
   status: "tersedia",
   image_url: "",
 };
@@ -65,8 +67,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
       name: item.name,
       price: String(item.price),
       category: item.category,
-      start_date: item.start_date,
-      end_date: item.end_date,
+      date: item.date,
       status: item.status,
       image_url: item.image_url || "",
     });
@@ -82,7 +83,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
   }
 
   async function handleSave() {
-    if (!form.name || !form.price || !form.category || !form.start_date || !form.end_date) {
+    if (!form.name || !form.price || !form.category || !form.date) {
       return;
     }
     setSaving(true);
@@ -102,8 +103,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
       name: form.name,
       price: Number(form.price),
       category: form.category,
-      start_date: form.start_date,
-      end_date: form.end_date,
+      date: form.date,
       status: form.status,
       image_url: imageUrl || null,
     };
@@ -141,10 +141,6 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
       return;
     }
     fetchMenus();
-  }
-
-  function todayStr() {
-    return new Date().toISOString().slice(0, 10);
   }
 
   return (
@@ -210,7 +206,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                       </span>
                     </div>
                     <p className="text-[10px] text-muted mt-0.5">
-                      {item.start_date} &ndash; {item.end_date}
+                      {item.date}
                     </p>
                   </div>
 
@@ -329,25 +325,14 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-muted mb-1">Tanggal Mulai</label>
-                  <input
-                    type="date"
-                    value={form.start_date}
-                    onChange={(e) => setForm({ ...form, start_date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-muted mb-1">Tanggal Selesai</label>
-                  <input
-                    type="date"
-                    value={form.end_date}
-                    onChange={(e) => setForm({ ...form, end_date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs text-muted mb-1">Tanggal</label>
+                <input
+                  type="date"
+                  value={form.date}
+                  onChange={(e) => setForm({ ...form, date: e.target.value })}
+                  className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
+                />
               </div>
 
               <div>
@@ -386,7 +371,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
               </button>
               <button
                 onClick={handleSave}
-                disabled={saving || !form.name || !form.price || !form.category || !form.start_date || !form.end_date}
+                disabled={saving || !form.name || !form.price || !form.category || !form.date}
                 className="flex-1 py-2.5 rounded-sm bg-turmeric text-forest-dark font-semibold text-sm disabled:opacity-50 transition-colors duration-180 active:bg-turmeric-deep"
               >
                 {saving ? "Menyimpan..." : "Simpan"}
