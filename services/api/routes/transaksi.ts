@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
 import { syncTransaksiToSheets } from '../services/sheets.service';
+import { authenticate, requireRole } from '../middleware/auth';
 
 const router: ReturnType<typeof Router> = Router();
 
@@ -39,7 +40,7 @@ async function generateInvoice(): Promise<string> {
   return `DKR-${dateStr}-${String(nextNumber).padStart(3, '0')}`;
 }
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticate, requireRole('admin', 'kasir'), async (req: Request, res: Response) => {
   try {
     const { id, items, total, kasir_id, device_id } = req.body;
 
@@ -85,7 +86,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/', async (_req: Request, res: Response) => {
+router.get('/', authenticate, async (_req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('transaksi')

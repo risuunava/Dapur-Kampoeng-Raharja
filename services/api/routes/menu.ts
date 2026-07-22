@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
+import { authenticate, requireRole } from '../middleware/auth';
 
 const router: ReturnType<typeof Router> = Router();
 
@@ -27,7 +28,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticate, requireRole('admin'), async (req: Request, res: Response) => {
   try {
     const { name, price, category, start_date, end_date, status } = req.body;
     const { data, error } = await supabase
@@ -43,7 +44,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', authenticate, requireRole('admin'), async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { data, error } = await supabase
@@ -61,7 +62,7 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticate, requireRole('admin'), async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { error } = await supabase.from('menu').delete().eq('id', id);
