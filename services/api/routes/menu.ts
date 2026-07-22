@@ -10,7 +10,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     const { date, status, category } = req.query;
     if (date) {
-      query = query.lte('start_date', date).gte('end_date', date);
+      query = query.eq('date', date);
     }
     if (status) {
       query = query.eq('status', status);
@@ -30,10 +30,10 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/', authenticate, requireRole('admin'), async (req: Request, res: Response) => {
   try {
-    const { name, price, category, start_date, end_date, status, image_url } = req.body;
+    const { name, price, category, date, status, image_url } = req.body;
     const { data, error } = await supabase
       .from('menu')
-      .insert({ name, price, category, start_date, end_date, status, image_url })
+      .insert({ name, price, category, date, status, image_url })
       .select()
       .single();
     if (error) return res.status(400).json({ error: error.message });

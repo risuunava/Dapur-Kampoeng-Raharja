@@ -5,8 +5,7 @@ export interface Menu {
   name: string;
   price: number;
   category: string;
-  start_date: string;
-  end_date: string;
+  date: string;
   status: 'tersedia' | 'habis';
   image_url?: string | null;
 }
