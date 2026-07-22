@@ -9,11 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@dapur-kampoeng/types": "workspace:*",
+    "@dapur-kampoeng/utils": "workspace:*",
+    "lucide-react": "^1.25.0",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "@dapur-kampoeng/utils": "workspace:*",
-    "@dapur-kampoeng/types": "workspace:*"
+    "react-icons": "^5.7.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
