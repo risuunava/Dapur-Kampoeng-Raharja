@@ -47,8 +47,8 @@ function getDishImage(id: string) {
 function MenuCardItem({ item, upcoming }: { item: MenuItem; upcoming?: boolean }) {
     const isHabis = item.status === 'habis' && !upcoming;
     return (
-      <div className="bg-surface rounded-2xl overflow-hidden shadow-card border border-line/50 group flex flex-col transition-shadow hover:shadow-lg">
-        <div className="relative w-full h-48 bg-line/20 overflow-hidden">
+      <div className="bg-surface rounded-xl md:rounded-2xl overflow-hidden shadow-card border border-line/50 group flex flex-col transition-shadow hover:shadow-lg">
+        <div className="relative w-full h-28 sm:h-36 md:h-48 bg-line/20 overflow-hidden">
           <img 
             src={item.image_url || getDishImage(item.id)}
             alt={item.name}
@@ -56,21 +56,21 @@ function MenuCardItem({ item, upcoming }: { item: MenuItem; upcoming?: boolean }
           />
           {isHabis && (
             <div className="absolute inset-0 bg-ink/50 flex items-center justify-center backdrop-blur-sm">
-              <span className="bg-chili text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase shadow-lg">Sold Out</span>
+              <span className="bg-chili text-white px-3 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold tracking-widest uppercase shadow-lg">Sold Out</span>
             </div>
           )}
           {upcoming && (
-            <div className="absolute top-3 left-3">
-              <span className="bg-turmeric text-forest-dark px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+            <div className="absolute top-2 left-2 md:top-3 md:left-3">
+              <span className="bg-turmeric text-forest-dark px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-bold shadow-lg">
                 Siap {formatDateLabel(item.date)}
               </span>
             </div>
           )}
         </div>
-        <div className="p-5 flex-1 flex flex-col justify-between">
+        <div className="p-3 md:p-5 flex-1 flex flex-col justify-between">
           <div>
-            <h3 className="font-bold text-ink text-base uppercase tracking-wide truncate mb-1" title={item.name}>{item.name}</h3>
-            <p className="text-xs text-muted leading-relaxed line-clamp-2 mb-4">
+            <h3 className="font-bold text-ink text-xs md:text-base uppercase tracking-wide truncate mb-1" title={item.name}>{item.name}</h3>
+            <p className="text-[10px] md:text-xs text-muted leading-relaxed line-clamp-2 mb-2 md:mb-4">
               {upcoming
                 ? `Hidangan ${item.category.toLowerCase()} khas Nusantara, siap ${formatDateLabel(item.date)}.`
                 : `Hidangan khas ${item.category.toLowerCase()} yang disiapkan dengan bumbu pilihan Nusantara.`
@@ -78,8 +78,8 @@ function MenuCardItem({ item, upcoming }: { item: MenuItem; upcoming?: boolean }
             </p>
           </div>
           <div className="mt-auto">
-            <p className="font-bold text-sm text-ink flex items-baseline gap-1">
-              <span className="text-xs text-muted font-normal uppercase">Harga:</span> 
+            <p className="font-bold text-xs md:text-sm text-ink flex items-baseline gap-1">
+              <span className="text-[10px] md:text-xs text-muted font-normal uppercase">Harga:</span> 
               <span className="text-primary">{formatRupiah(item.price)}</span>
             </p>
           </div>
@@ -139,13 +139,13 @@ export default function Home() {
       <main>
         <HeroSection />
 
-        <section id="menu" className="max-w-7xl mx-auto px-4 md:px-8 py-16">
-          <h2 className="text-3xl font-display font-bold text-ink mb-6">Kategori Menu</h2>
+        <section id="menu" className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-16">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-ink mb-4 md:mb-6">Kategori Menu</h2>
           
-          <div className="flex flex-wrap items-center gap-4 mb-16">
+          <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-8 md:mb-16">
             <button
               onClick={() => setSelectedCategory("All")}
-              className={`px-8 py-3 rounded-full text-sm font-semibold transition-colors ${
+              className={`px-5 md:px-8 py-2 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-colors ${
                 selectedCategory === "All"
                   ? "bg-forest text-white shadow-md"
                   : "bg-surface text-muted hover:text-ink hover:shadow-sm"
@@ -157,7 +157,7 @@ export default function Home() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-8 py-3 rounded-full text-sm font-semibold transition-colors ${
+                className={`px-5 md:px-8 py-2 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-colors ${
                   selectedCategory === cat
                     ? "bg-forest text-white shadow-md"
                     : "bg-surface text-muted hover:text-ink hover:shadow-sm"
@@ -177,10 +177,10 @@ export default function Home() {
 
           {!loading && !error && filteredToday.length > 0 && (
             <>
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-display font-bold text-ink">Menu Hari Ini</h2>
+              <div className="text-center mb-8 md:mb-12">
+                <h2 className="text-2xl md:text-4xl font-display font-bold text-ink">Menu Hari Ini</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-16">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-12 md:mb-16">
                 {filteredToday.map((item) => (
                   <MenuCardItem key={item.id} item={item} />
                 ))}
@@ -190,11 +190,11 @@ export default function Home() {
 
           {!loading && !error && filteredUpcoming.length > 0 && (
             <>
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-display font-bold text-ink">Segera</h2>
-                <p className="text-muted text-sm mt-2">Menu yang akan hadir di Dapur Kampoeng Raharja</p>
+              <div className="text-center mb-8 md:mb-12">
+                <h2 className="text-2xl md:text-3xl font-display font-bold text-ink">Segera</h2>
+                <p className="text-muted text-xs md:text-sm mt-2">Menu yang akan hadir di Dapur Kampoeng Raharja</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
                 {filteredUpcoming.map((item) => (
                   <MenuCardItem key={item.id} item={item} upcoming />
                 ))}
