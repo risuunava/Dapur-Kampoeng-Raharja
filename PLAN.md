@@ -444,9 +444,12 @@ export const supabase = createClient(
 
 Tujuan: menu tampil di website, kasir bisa input transaksi langsung ke database (belum offline, belum Sheets).
 
-### 1a.1 Menu CRUD (API)
+### 1a.1 Menu CRUD (API & UI)
 - [x] Endpoint `GET /menu` (dengan filter tanggal & status)
-- [x] Endpoint `POST /menu`, `PUT /menu/:id`, `DELETE /menu/:id` (admin only, sementara tanpa auth ketat dulu — bisa hardcode admin token)
+- [x] Endpoint `POST /menu`, `PUT /menu/:id`, `DELETE /menu/:id`
+- [x] UI halaman manajemen menu di Kasir App (tambah/edit/hapus menu via modal form)
+- [x] UI toggle status Tersedia/Habis langsung dari daftar menu (KSR-05)
+- [x] UI navigasi antara mode transaksi dan mode atur menu
 
 ### 1a.2 Website Menampilkan Menu
 - [x] `apps/web` fetch dari `GET /menu` via `lib/api.ts`
@@ -464,6 +467,16 @@ Tujuan: menu tampil di website, kasir bisa input transaksi langsung ke database 
 - [x] Endpoint `POST /auth/login` (username + PIN)
 - [x] Simpan token di Kasir App
 
+### 1a.5 Auth Middleware & Route Protection (SEC-02, SEC-03)
+- [x] Middleware `authenticate` — verifikasi JWT token di semua request kecuali GET /menu (public)
+- [x] Middleware `requireRole` — batasi akses: POST/PUT/DELETE menu hanya admin, POST transaksi hanya admin/kasir
+- [x] Endpoint menu & transaksi sudah dilindungi middleware
+
+### 1a.6 Website Auto-Refresh (WEB-05)
+- [x] Polling otomatis setiap 30 detik
+- [x] Refetch saat tab kembali aktif (visibilitychange)
+- [x] Indikator "diperbarui X detik lalu" di header
+
 **Checkpoint Phase 1a:** ✅ sistem bisa dipakai di warung secara nyata selama koneksi internet stabil. Ini baseline sebelum menambah kompleksitas offline & Sheets.
 
 ---
@@ -479,7 +492,7 @@ Tujuan: menu tampil di website, kasir bisa input transaksi langsung ke database 
 3. Di sidebar, buka **APIs & Services → Library**.
 4. Cari **Google Sheets API**, klik **Enable**.
 
-- [ ] Google Sheets API aktif di project
+- [x] Google Sheets API aktif di project
 
 ### 1b.2 Buat Service Account (Cara Terbaik untuk Backend-to-Sheets)
 
@@ -492,8 +505,8 @@ Kenapa Service Account, bukan OAuth biasa: karena `services/sheets` adalah prose
 5. Setelah service account dibuat, klik masuk ke dalamnya → tab **Keys** → **Add Key → Create new key → JSON**.
 6. File JSON credentials otomatis terdownload — **ini rahasia, jangan pernah commit ke git**.
 
-- [ ] Service account dibuat
-- [ ] File JSON credentials didownload dan disimpan aman
+- [x] Service account dibuat
+- [x] File JSON credentials didownload dan disimpan aman
 
 ### 1b.3 Share Google Sheet ke Service Account
 
@@ -503,7 +516,7 @@ Kenapa Service Account, bukan OAuth biasa: karena `services/sheets` adalah prose
 
 **Ini langkah yang paling sering terlewat oleh pemula** — service account punya "akun" sendiri yang terpisah dari akun Google pribadi, dan tidak otomatis punya akses ke Sheet manapun sampai di-share manual seperti share ke orang lain.
 
-- [ ] Sheet sudah di-share ke `client_email` service account dengan akses Editor
+- [x] Sheet sudah di-share ke `client_email` service account dengan akses Editor
 
 ### 1b.4 Siapkan Struktur Sheet
 
@@ -513,7 +526,7 @@ Buat sheet/tab bernama `Transaksi` dengan header di baris 1, sesuai SHT-02:
 waktu | invoice | menu | qty | harga | total | kasir
 ```
 
-- [ ] Header kolom sudah sesuai urutan yang akan dikirim dari kode
+- [x] Header kolom sudah sesuai urutan yang akan dikirim dari kode
 
 ### 1b.5 Setup Kredensial di Project
 

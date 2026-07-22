@@ -72,6 +72,45 @@ export async function getMenu(params?: {
   return fetchApi<MenuItem[]>(`/menu${query ? `?${query}` : ''}`);
 }
 
+export async function getAllMenu(): Promise<ApiResponse<MenuItem[]>> {
+  return fetchApi<MenuItem[]>('/menu');
+}
+
+export async function createMenu(data: {
+  name: string;
+  price: number;
+  category: string;
+  start_date: string;
+  end_date: string;
+  status: 'tersedia' | 'habis';
+}): Promise<ApiResponse<MenuItem>> {
+  return fetchApi<MenuItem>('/menu', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateMenu(
+  id: string,
+  data: Partial<{
+    name: string;
+    price: number;
+    category: string;
+    start_date: string;
+    end_date: string;
+    status: 'tersedia' | 'habis';
+  }>
+): Promise<ApiResponse<MenuItem>> {
+  return fetchApi<MenuItem>(`/menu/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteMenu(id: string): Promise<ApiResponse<null>> {
+  return fetchApi<null>(`/menu/${id}`, { method: 'DELETE' });
+}
+
 export async function createTransaksi(data: {
   id: string;
   items: Array<{ menu_id: string; name: string; qty: number; price: number }>;

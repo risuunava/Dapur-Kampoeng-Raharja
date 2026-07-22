@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { login as apiLogin, getMenu, createTransaksi } from "../../lib/api";
 import { formatRupiah } from "@dapur-kampoeng/utils";
+import MenuManagement from "../../features/menu/components/MenuManagement";
 
-type View = "login" | "menu" | "cart" | "receipt";
+type View = "login" | "menu" | "cart" | "receipt" | "management";
 
 interface UserInfo {
   id: string;
@@ -84,9 +85,17 @@ export default function KasirApp() {
             </span>
             <span className="text-xs bg-white/15 px-2 py-0.5 rounded">{user.name}</span>
           </div>
-          <button onClick={handleLogout} className="text-xs text-white/70 hover:text-white">
-            Keluar
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setView(view === "management" ? "menu" : "management")}
+              className="text-xs text-white/70 hover:text-white transition-colors duration-180"
+            >
+              {view === "management" ? "Transaksi" : "Atur Menu"}
+            </button>
+            <button onClick={handleLogout} className="text-xs text-white/70 hover:text-white transition-colors duration-180">
+              Keluar
+            </button>
+          </div>
         </header>
       )}
 
@@ -114,6 +123,9 @@ export default function KasirApp() {
             setCart={setCart}
             onViewCart={() => setView("cart")}
           />
+        )}
+        {view === "management" && user && (
+          <MenuManagement onBack={() => setView("menu")} />
         )}
         {view === "cart" && user && (
           <CartView
