@@ -30,10 +30,10 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/', authenticate, requireRole('admin'), async (req: Request, res: Response) => {
   try {
-    const { name, price, category, start_date, end_date, status } = req.body;
+    const { name, price, category, start_date, end_date, status, image_url } = req.body;
     const { data, error } = await supabase
       .from('menu')
-      .insert({ name, price, category, start_date, end_date, status })
+      .insert({ name, price, category, start_date, end_date, status, image_url })
       .select()
       .single();
     if (error) return res.status(400).json({ error: error.message });

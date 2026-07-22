@@ -8,6 +8,7 @@ export interface Menu {
   start_date: string;
   end_date: string;
   status: 'tersedia' | 'habis';
+  image_url?: string | null;
 }
 
 export interface TransaksiItem {

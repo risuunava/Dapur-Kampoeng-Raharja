@@ -10,6 +10,7 @@ import menuRoutes from './routes/menu';
 import transaksiRoutes from './routes/transaksi';
 import authRoutes from './routes/auth';
 import dashboardRoutes from './routes/dashboard';
+import uploadRoutes from './routes/upload';
 
 const app = express();
 app.use(cors());
@@ -34,6 +35,7 @@ app.use('/menu', menuRoutes);
 app.use('/transaksi', transaksiRoutes);
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/upload', uploadRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));
