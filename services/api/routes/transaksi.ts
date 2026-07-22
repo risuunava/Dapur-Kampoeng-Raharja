@@ -9,6 +9,18 @@ async function generateInvoice(): Promise<string> {
   const today = new Date().toISOString().slice(0, 10);
   const dateStr = today.replace(/-/g, '');
 
+  const { data: rpcResult, error: rpcError } = await supabase.rpc('generate_invoice_number', {
+    target_date: today,
+  });
+
+  if (!rpcError && rpcResult) {
+    return rpcResult as string;
+  }
+
+  if (!rpcError?.message?.includes('function') && !rpcError?.message?.includes('exists')) {
+    console.warn('[Invoice] RPC fallback ke manual counter:', rpcError?.message);
+  }
+
   const { data: counter, error: selectError } = await supabase
     .from('invoice_counter')
     .select('last_number')

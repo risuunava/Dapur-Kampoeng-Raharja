@@ -594,29 +594,35 @@ Fungsi `appendBatchToSheet` sudah tersedia di `services/sheets/src/appendTransak
 Tujuan: Kasir App bisa bikin transaksi tanpa internet dan sync otomatis saat online, sesuai SYNC-01 s/d SYNC-08.
 
 ### 2.1 Local Storage di Kasir App
-- [ ] Install SQLite plugin untuk Capacitor: `npm install @capacitor-community/sqlite` (atau IndexedDB via `idb` kalau ingin tetap web-only tanpa native plugin dulu)
-- [ ] Buat skema local table `transaksi_local` yang mirror struktur DB (id UUID, items, total, sync_status, dst)
-- [ ] Implementasi `lib/local-db.ts`: fungsi `saveTransaksiLocal`, `getPendingTransaksi`, `updateSyncStatus`
+- [x] Install `idb` (IndexedDB wrapper) — web-only, tanpa native plugin, kompatibel browser & Capacitor WebView
+- [x] Buat object store `transaksi` di IndexedDB dengan index `sync_status`
+- [x] Implementasi `lib/local-db.ts`: `saveTransaksiLocal`, `getPendingTransaksi`, `updateSyncStatus`, `getTransaksiById`, `getAllTransaksiLocal`, `deleteTransaksiLocal`
 
 ### 2.2 Transaction Queue & Sync Engine
-- [ ] Implementasi `lib/sync.ts`: loop yang jalan tiap X detik, ambil transaksi `pending`/`failed`, kirim ke API
-- [ ] Set status `syncing` saat mulai kirim, biar retry timer lain tidak kirim dobel
-- [ ] Update status jadi `synced_db` kalau API balas sukses dengan invoice number
-- [ ] Kalau gagal (network error), balik ke `pending`, hitung retry count untuk backoff
+- [x] Implementasi `lib/sync.ts`: loop tiap 10 detik, ambil transaksi `pending`/`failed`, kirim ke API
+- [x] Set status `syncing` saat mulai kirim, biar retry timer lain tidak kirim dobel
+- [x] Update status jadi `synced_db` kalau API balas sukses dengan invoice number, update receipt real-time via subscriber
+- [x] Kalau gagal network: balik ke `pending` (max 10 retry), kalau error lain: jadi `failed`, hitung retry count
+- [x] Fungsi `retryTransaksi(id)` untuk retry manual — ubah status ke `pending` lalu jalankan sync cycle
 
 ### 2.3 Idempotent API Endpoint
-- [ ] `POST /transaksi` cek dulu apakah UUID sudah ada di DB (via `id` sebagai primary key)
-- [ ] Kalau sudah ada → return response yang sama seperti transaksi sukses (bukan insert baru, bukan error)
-- [ ] Kalau belum ada → insert baru, generate invoice server-side pakai `invoice_counter` (dengan row lock/transaction untuk hindari race condition antar transaksi yang masuk bersamaan)
+- [x] `POST /transaksi` cek dulu apakah UUID sudah ada di DB (via `id` sebagai primary key) — sudah dari Phase 1a
+- [x] Kalau sudah ada → return response yang sama seperti transaksi sukses (bukan insert baru, bukan error)
+- [x] Kalau belum ada → insert baru, generate invoice server-side pakai `invoice_counter`
 
-### 2.4 Server-Side Invoice Generation
-- [ ] Buat fungsi SQL/transaction: increment `invoice_counter` untuk tanggal hari ini, format jadi `DKR-YYYYMMDD-XXX`
-- [ ] Pastikan operasi ini atomic (pakai `SELECT ... FOR UPDATE` di Postgres) supaya dua transaksi masuk bersamaan tidak dapat nomor sama
+### 2.4 Server-Side Invoice Generation (Atomic)
+- [x] Buat SQL function `generate_invoice_number` dengan `SELECT ... FOR UPDATE` di `database/migrations/001_atomic_invoice_counter.sql`
+- [x] Panggil via `supabase.rpc('generate_invoice_number', ...)` — atomic, hindari race condition
+- [x] Fallback ke manual counter jika RPC belum di-create (kompatibel mundur)
+- [ ] **PRASYARAT:** Jalankan `database/migrations/001_atomic_invoice_counter.sql` di Supabase SQL Editor untuk mengaktifkan atomic invoice
 
 ### 2.5 UI Status Sinkronisasi di Kasir App
-- [ ] Tampilkan badge status per transaksi: Menunggu / Sinkron / Gagal (KSR-08)
-- [ ] Tombol manual retry untuk transaksi `failed` (KSR-09)
-- [ ] Struk tampilkan UUID/placeholder saat masih `pending`, ganti ke invoice resli setelah `synced_db`
+- [x] Badge status per transaksi di struk: 🟡 Menunggu / 🔵 Menyinkronkan / 🟢 Tersinkron / 🔴 Gagal (KSR-08)
+- [x] Tombol "Coba Kirim Ulang" di struk untuk transaksi gagal (KSR-09)
+- [x] Struk tampilkan UUID/placeholder saat masih `pending`, ganti ke invoice setelah `synced_db`
+- [x] Halaman Riwayat Transaksi dengan filter status (Semua / Menunggu / Tersinkron / Gagal)
+- [x] Online/offline indicator di header (🟢 / 🔴)
+- [x] Header sync engine otomatis: subscribe ke perubahan status, update badge real-time
 
 **Checkpoint Phase 2:** matikan wifi warung di tengah simulasi transaksi, transaksi tetap tersimpan, otomatis sync begitu online kembali, tidak ada yang hilang atau dobel.
 
