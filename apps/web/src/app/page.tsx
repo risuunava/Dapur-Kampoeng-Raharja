@@ -95,31 +95,49 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const fetchRef = useRef<() => Promise<void>>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [elapsed, setElapsed] = useState(0);
 
-  const fetchMenu = useCallback(async () => {
-    setLoading(true);
+  const fetchMenu = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     setError("");
     const result = await getMenu();
     if (result.error) {
       setError(result.error);
-      setMenu([]);
+      if (isInitial) setMenu([]);
     } else {
       const all = result.data || [];
       all.sort((a, b) => a.date.localeCompare(b.date));
       setMenu(all);
+      setLastUpdated(new Date());
+      setElapsed(0);
     }
-    setLoading(false);
+    if (isInitial) setLoading(false);
   }, []);
 
+  // Initial fetch + auto-refresh every 30s
   useEffect(() => {
-    fetchRef.current = fetchMenu;
+    fetchMenu(true);
+    getCategories().then((cats) => setCategories(cats));
+    const interval = setInterval(() => fetchMenu(), 30000);
+    return () => clearInterval(interval);
   }, [fetchMenu]);
 
+  // Refetch on tab focus
   useEffect(() => {
-    fetchMenu();
-    getCategories().then((cats) => setCategories(cats));
+    const onFocus = () => fetchMenu();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
   }, [fetchMenu]);
+
+  // Update elapsed seconds counter
+  useEffect(() => {
+    if (!lastUpdated) return;
+    const tick = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - lastUpdated.getTime()) / 1000));
+    }, 10000);
+    return () => clearInterval(tick);
+  }, [lastUpdated]);
 
   const today = todayString();
   const todayMenus = menu.filter((m) => m.date === today);
@@ -194,6 +212,16 @@ export default function Home() {
             <>
               <div className="text-center mb-8 md:mb-12">
                 <h2 className="text-2xl md:text-4xl font-display font-bold text-ink">Menu Hari Ini</h2>
+                <p className="text-xs text-muted mt-2">
+                  {lastUpdated && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-forest" />
+                      Diperbarui {elapsed < 60
+                        ? `${elapsed} detik yang lalu`
+                        : `${Math.floor(elapsed / 60)} menit yang lalu`}
+                    </span>
+                  )}
+                </p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-12 md:mb-16">
                 {filteredToday.map((item) => (
