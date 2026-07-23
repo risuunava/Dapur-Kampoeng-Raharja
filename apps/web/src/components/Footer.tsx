@@ -18,7 +18,7 @@ export default function Footer() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
         <div>
           <div className="flex items-center gap-2 mb-4 md:mb-6">
-            <span className="text-lg md:text-xl font-bold tracking-tight text-primary font-display uppercase">Dapur Kampoeng</span>
+            <img src="/images/logo.png" alt="Dapur Kampoeng" className="h-7 md:h-8 w-auto" />
           </div>
           <div className="flex items-center gap-3">
             <FaFacebookF className="w-4 h-4 text-muted hover:text-primary cursor-pointer transition-colors" />

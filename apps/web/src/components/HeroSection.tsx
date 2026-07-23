@@ -3,22 +3,22 @@ import Image from 'next/image';
 const signatures = [
   {
     name: 'Nasi Goreng',
-    desc: 'Indonesian fried rice with sweet soy sauce, shallot, garlic, tamarind and chilli.',
+    desc: 'Nasi goreng khas Indonesia dengan kecap manis, bawang merah, bawang putih, asam jawa, dan cabai.',
     image: '/images/dish_rice_1784699494737.png',
   },
   {
     name: 'Sate Ayam',
-    desc: 'Grilled chicken skewers served with a rich and savory peanut sauce.',
+    desc: 'Tusuk ayam panggang yang disajikan dengan saus kacang yang kaya dan gurih.',
     image: '/images/dish_satay_1784699504463.png',
   },
   {
     name: 'Mie Goreng',
-    desc: 'Flavorful and spicy fried noodle dish common in Indonesia.',
+    desc: 'Hidangan mie goreng pedas yang lezat dan umum di Indonesia.',
     image: '/images/dish_noodle_1784699485646.png',
   },
   {
     name: 'Soto Ayam',
-    desc: 'Traditional yellow spicy chicken soup with lontong or nasi.',
+    desc: 'Sup ayam kuning pedas tradisional dengan lontong atau nasi.',
     image: '/images/dish_soup_1784699516279.png',
   }
 ];

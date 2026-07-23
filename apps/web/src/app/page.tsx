@@ -92,6 +92,7 @@ export default function Home() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const fetchRef = useRef<() => Promise<void>>(null);
@@ -124,17 +125,31 @@ export default function Home() {
   const todayMenus = menu.filter((m) => m.date === today);
   const upcomingMenus = menu.filter((m) => isUpcoming(m.date));
 
-  const filteredToday = selectedCategory === "All"
-    ? todayMenus
-    : todayMenus.filter((m) => m.category === selectedCategory);
+  function filterBySearch(items: MenuItem[]) {
+    if (!searchQuery) return items;
+    const q = searchQuery.toLowerCase();
+    return items.filter(
+      (m) =>
+        m.name.toLowerCase().includes(q) ||
+        m.category.toLowerCase().includes(q)
+    );
+  }
 
-  const filteredUpcoming = selectedCategory === "All"
-    ? upcomingMenus
-    : upcomingMenus.filter((m) => m.category === selectedCategory);
+  const filteredToday = filterBySearch(
+    selectedCategory === "All"
+      ? todayMenus
+      : todayMenus.filter((m) => m.category === selectedCategory)
+  );
+
+  const filteredUpcoming = filterBySearch(
+    selectedCategory === "All"
+      ? upcomingMenus
+      : upcomingMenus.filter((m) => m.category === selectedCategory)
+  );
 
   return (
-    <div className="min-h-screen bg-bg">
-      <Navbar />
+    <div className="min-h-screen">
+      <Navbar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       
       <main>
         <HeroSection />
