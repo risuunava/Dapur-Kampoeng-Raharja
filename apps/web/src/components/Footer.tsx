@@ -21,29 +21,29 @@ export default function Footer() {
             <img src="/images/logo.png" alt="Dapur Kampoeng" className="h-7 md:h-8 w-auto" />
           </div>
           <div className="flex items-center gap-3">
-            <FaFacebookF className="w-4 h-4 text-muted hover:text-primary cursor-pointer transition-colors" />
-            <FaTwitter className="w-4 h-4 text-muted hover:text-primary cursor-pointer transition-colors" />
-            <FaLinkedinIn className="w-4 h-4 text-muted hover:text-primary cursor-pointer transition-colors" />
-            <FaInstagram className="w-4 h-4 text-muted hover:text-primary cursor-pointer transition-colors" />
+            <FaFacebookF className="w-4 h-4 text-muted hover:text-turmeric cursor-pointer transition-colors" />
+            <FaTwitter className="w-4 h-4 text-muted hover:text-turmeric cursor-pointer transition-colors" />
+            <FaLinkedinIn className="w-4 h-4 text-muted hover:text-turmeric cursor-pointer transition-colors" />
+            <FaInstagram className="w-4 h-4 text-muted hover:text-turmeric cursor-pointer transition-colors" />
           </div>
         </div>
         
         <div>
           <h4 className="font-bold text-ink mb-3 md:mb-4 text-sm md:text-base">Our services</h4>
           <ul className="space-y-2 md:space-y-3 text-xs text-muted font-medium">
-            <li className="hover:text-primary cursor-pointer transition-colors">Pricing</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Tracking</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Report a Bug</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Terms of service</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Pricing</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Tracking</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Report a Bug</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Terms of service</li>
           </ul>
         </div>
         
         <div>
           <h4 className="font-bold text-ink mb-3 md:mb-4 text-sm md:text-base">Our Company</h4>
           <ul className="space-y-2 md:space-y-3 text-xs text-muted font-medium">
-            <li className="hover:text-primary cursor-pointer transition-colors">Reporting</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Get in Touch</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Management</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Reporting</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Get in Touch</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">Management</li>
           </ul>
         </div>
         
@@ -52,7 +52,7 @@ export default function Footer() {
           <ul className="space-y-2 md:space-y-3 text-xs text-muted font-medium">
             <li>121 King St.</li>
             <li>888-123-42278</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">hello.dapurkampoeng@gmail.com</li>
+            <li className="hover:text-turmeric cursor-pointer transition-colors">hello.dapurkampoeng@gmail.com</li>
           </ul>
         </div>
       </div>

@@ -80,7 +80,7 @@ function MenuCardItem({ item, upcoming }: { item: MenuItem; upcoming?: boolean }
           <div className="mt-auto">
             <p className="font-bold text-xs md:text-sm text-ink flex items-baseline gap-1">
               <span className="text-[10px] md:text-xs text-muted font-normal uppercase">Harga:</span> 
-              <span className="text-primary">{formatRupiah(item.price)}</span>
+              <span className="text-turmeric">{formatRupiah(item.price)}</span>
             </p>
           </div>
         </div>
