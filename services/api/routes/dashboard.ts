@@ -33,8 +33,8 @@ router.get('/summary', authenticate, requireRole('admin', 'kasir'), async (_req:
     const month = monthRange();
 
     const [todayData, monthData] = await Promise.all([
-      supabase.from('transaksi').select('total').gte('created_at', today.start).lt('created_at', today.end).eq('sync_status', 'synced_db'),
-      supabase.from('transaksi').select('total').gte('created_at', month.start).lt('created_at', month.end).eq('sync_status', 'synced_db'),
+      supabase.from('transaksi').select('total').gte('created_at', today.start).lt('created_at', today.end).in('sync_status', ['synced_db', 'synced_sheets']),
+      supabase.from('transaksi').select('total').gte('created_at', month.start).lt('created_at', month.end).in('sync_status', ['synced_db', 'synced_sheets']),
     ]);
 
     const todayTotal = (todayData.data || []).reduce((sum, t) => sum + (t.total || 0), 0);
@@ -67,7 +67,7 @@ router.get('/best-seller', authenticate, requireRole('admin', 'kasir'), async (r
       .select('items')
       .gte('created_at', range.start)
       .lte('created_at', range.end)
-      .eq('sync_status', 'synced_db');
+      .in('sync_status', ['synced_db', 'synced_sheets']);
 
     if (error) return res.status(500).json({ error: error.message });
 
@@ -109,7 +109,7 @@ router.get('/category-sales', authenticate, requireRole('admin', 'kasir'), async
         .select('items')
         .gte('created_at', range.start)
         .lte('created_at', range.end)
-        .eq('sync_status', 'synced_db'),
+        .in('sync_status', ['synced_db', 'synced_sheets']),
     ]);
 
     if (transaksiData.error) return res.status(500).json({ error: transaksiData.error.message });
@@ -158,7 +158,7 @@ router.get('/daily-trend', authenticate, requireRole('admin', 'kasir'), async (r
       .select('created_at, total')
       .gte('created_at', startDate.toISOString())
       .lte('created_at', now.toISOString())
-      .eq('sync_status', 'synced_db')
+      .in('sync_status', ['synced_db', 'synced_sheets'])
       .order('created_at', { ascending: true });
 
     if (error) return res.status(500).json({ error: error.message });
