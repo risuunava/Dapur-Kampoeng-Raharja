@@ -21,7 +21,10 @@
 }
 
 body {
-  background: var(--color-bg);
+  background-color: #F8F9FA;
+  background-image: radial-gradient(#D1D5DB 2px, transparent 2px);
+  background-size: 40px 40px;
+  background-position: -20px -20px;
   color: var(--color-ink);
   font-family: var(--font-body);
 }
