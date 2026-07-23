@@ -26,8 +26,8 @@ export default function LoginView({
   error, setError, loading, setLoading, onSuccess,
 }: LoginViewProps) {
   async function handleLogin() {
-    if (!username || pin.length < 4) {
-      setError("Username dan PIN 4-6 digit diperlukan");
+    if (!username || pin.length < 6) {
+      setError("Username dan PIN 6 digit diperlukan");
       return;
     }
     setLoading(true);
@@ -158,7 +158,7 @@ export default function LoginView({
 
             <button
               onClick={handleLogin}
-              disabled={loading || pin.length < 4}
+              disabled={loading || pin.length < 6}
               className="w-full py-4 mt-4 rounded-xl bg-forest hover:bg-forest-dark text-white font-semibold text-base disabled:opacity-50 transition-all duration-180 active:scale-[0.98] flex items-center justify-center gap-2 shadow-md shadow-forest/20"
             >
               {loading ? (
