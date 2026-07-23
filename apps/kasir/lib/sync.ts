@@ -32,7 +32,7 @@ async function syncOne(t: TransaksiLocal): Promise<void> {
   });
 
   if (result.data) {
-    await updateSyncStatus(t.id, 'synced_db', 0);
+    await updateSyncStatus(t.id, 'synced_db', 0, undefined, result.data.invoice);
 
     const synced: TransaksiLocal = {
       ...t,

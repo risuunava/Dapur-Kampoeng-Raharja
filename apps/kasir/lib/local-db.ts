@@ -50,7 +50,8 @@ export async function updateSyncStatus(
   id: string,
   status: TransaksiLocal['sync_status'],
   retry_count?: number,
-  last_error?: string
+  last_error?: string,
+  invoice?: string | null
 ): Promise<void> {
   const db = await getDb();
   const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -60,6 +61,7 @@ export async function updateSyncStatus(
     existing.sync_status = status;
     if (retry_count !== undefined) existing.retry_count = retry_count;
     if (last_error !== undefined) existing.last_error = last_error;
+    if (invoice !== undefined) existing.invoice = invoice;
     await store.put(existing);
   }
   await tx.done;
