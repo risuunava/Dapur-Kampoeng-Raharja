@@ -614,7 +614,7 @@ Tujuan: Kasir App bisa bikin transaksi tanpa internet dan sync otomatis saat onl
 - [x] Buat SQL function `generate_invoice_number` dengan `SELECT ... FOR UPDATE` di `database/migrations/001_atomic_invoice_counter.sql`
 - [x] Panggil via `supabase.rpc('generate_invoice_number', ...)` — atomic, hindari race condition
 - [x] Fallback ke manual counter jika RPC belum di-create (kompatibel mundur)
-- [ ] **PRASYARAT:** Jalankan `database/migrations/001_atomic_invoice_counter.sql` di Supabase SQL Editor untuk mengaktifkan atomic invoice
+- [x] **PRASYARAT:** Jalankan `database/migrations/001_atomic_invoice_counter.sql` di Supabase SQL Editor untuk mengaktifkan atomic invoice
 
 ### 2.5 UI Status Sinkronisasi di Kasir App
 - [x] Badge status per transaksi di struk: 🟡 Menunggu / 🔵 Menyinkronkan / 🟢 Tersinkron / 🔴 Gagal (KSR-08)
