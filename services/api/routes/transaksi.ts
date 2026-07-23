@@ -7,49 +7,20 @@ const router: ReturnType<typeof Router> = Router();
 
 async function generateInvoice(): Promise<string> {
   const today = new Date().toISOString().slice(0, 10);
-  const dateStr = today.replace(/-/g, '');
 
-  const { data: rpcResult, error: rpcError } = await supabase.rpc('generate_invoice_number', {
+  const { data, error } = await supabase.rpc('generate_invoice_number', {
     target_date: today,
   });
 
-  if (!rpcError && rpcResult) {
-    return rpcResult as string;
+  if (error) {
+    throw new Error(
+      `Gagal generate invoice: ${error.message}. ` +
+      'Pastikan fungsi generate_invoice_number sudah di-deploy ' +
+      '(jalankan database/migrations/001_atomic_invoice_counter.sql di Supabase SQL Editor).'
+    );
   }
 
-  if (!rpcError?.message?.includes('function') && !rpcError?.message?.includes('exists')) {
-    console.warn('[Invoice] RPC fallback ke manual counter:', rpcError?.message);
-  }
-
-  const { data: counter, error: selectError } = await supabase
-    .from('invoice_counter')
-    .select('last_number')
-    .eq('date', today)
-    .single();
-
-  let nextNumber = 1;
-
-  if (selectError || !counter) {
-    const { error: insertError } = await supabase
-      .from('invoice_counter')
-      .insert({ date: today, last_number: 1 });
-
-    if (insertError && !insertError.message.includes('duplicate')) {
-      throw new Error(`Gagal buat counter: ${insertError.message}`);
-    }
-  } else {
-    nextNumber = counter.last_number + 1;
-    const { error: updateError } = await supabase
-      .from('invoice_counter')
-      .update({ last_number: nextNumber })
-      .eq('date', today);
-
-    if (updateError) {
-      throw new Error(`Gagal update counter: ${updateError.message}`);
-    }
-  }
-
-  return `DKR-${dateStr}-${String(nextNumber).padStart(3, '0')}`;
+  return data as string;
 }
 
 router.post('/', authenticate, requireRole('admin', 'kasir'), async (req: Request, res: Response) => {
