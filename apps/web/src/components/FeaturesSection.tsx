@@ -43,6 +43,7 @@ export default function FeaturesSection() {
                 src="/images/feature_img_1_1784699536052.png"
                 alt="Fresh ingredients"
                 fill
+                sizes="(max-width: 768px) 50vw, 33vw"
                 className="object-cover"
               />
           </div>
@@ -51,6 +52,7 @@ export default function FeaturesSection() {
                 src="/images/dish_noodle_1784699485646.png"
                 alt="Delicious food"
                 fill
+                sizes="(max-width: 768px) 50vw, 33vw"
                 className="object-cover"
               />
           </div>

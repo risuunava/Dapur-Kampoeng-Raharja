@@ -37,6 +37,8 @@ export default function HeroSection() {
               src="/images/hero_collage_1784699474875.png" 
               alt="Indonesian Cuisine Feast"
               fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
               className="object-cover"
             />
           </div>
@@ -50,6 +52,7 @@ export default function HeroSection() {
                   src={item.image}
                   alt={item.name}
                   fill
+                  sizes="64px"
                   className="object-cover"
                 />
               </div>
