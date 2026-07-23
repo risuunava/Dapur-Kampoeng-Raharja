@@ -5,7 +5,11 @@ import { supabase } from '../lib/supabase';
 
 const router: ReturnType<typeof Router> = Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dapur-kampoeng-dev-secret';
+const JWT_SECRET = (() => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET tidak diatur di environment variables');
+  return secret;
+})();
 
 router.post('/login', async (req: Request, res: Response) => {
   try {
