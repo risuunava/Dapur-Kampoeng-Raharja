@@ -2,11 +2,12 @@ import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
 import { syncTransaksiToSheets } from '../services/sheets.service';
 import { authenticate, requireRole } from '../middleware/auth';
+import { getLocalDateString } from '@dapur-kampoeng/utils';
 
 const router: ReturnType<typeof Router> = Router();
 
 async function generateInvoice(): Promise<string> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getLocalDateString();
 
   const { data, error } = await supabase.rpc('generate_invoice_number', {
     target_date: today,

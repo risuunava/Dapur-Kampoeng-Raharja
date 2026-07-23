@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { getMenu, getCategories, MenuItem } from "../../lib/api";
-import { formatRupiah } from "@dapur-kampoeng/utils";
+import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
 
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
@@ -11,11 +11,11 @@ import FeaturesSection from "../components/FeaturesSection";
 import Footer from "../components/Footer";
 
 function formatDate(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  return getLocalDateString(date);
 }
 
 function todayString(): string {
-  return formatDate(new Date());
+  return getLocalDateString();
 }
 
 function formatDateLabel(dateStr: string): string {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getMenu } from "../../../lib/api";
-import { formatRupiah } from "@dapur-kampoeng/utils";
+import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
 import { ShoppingCart } from "lucide-react";
 import SearchInput from "../../../components/SearchInput";
 import CategoryChip from "../../../components/CategoryChip";
@@ -58,7 +58,7 @@ export default function MenuView({
   const [categories, setCategories] = useState<string[]>([]);
 
   const fetchMenu = useCallback(async () => {
-    const res = await getMenu({ date: new Date().toISOString().slice(0, 10) });
+    const res = await getMenu({ date: getLocalDateString() });
     if (res.data) {
       setMenuItems(res.data);
       const cats = Array.from(new Set(res.data.map((m) => m.category))).sort();

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
 import { authenticate, requireRole } from '../middleware/auth';
-
+import { getLocalDateString } from '@dapur-kampoeng/utils';
 const router: ReturnType<typeof Router> = Router();
 
 function todayRange(): { start: string; end: string } {
@@ -167,12 +167,12 @@ router.get('/daily-trend', authenticate, requireRole('admin', 'kasir'), async (r
 
     for (let i = 0; i < days; i++) {
       const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
-      const key = d.toISOString().slice(0, 10);
+      const key = getLocalDateString(d);
       daily[key] = { date: key, total: 0, count: 0 };
     }
 
     for (const t of data || []) {
-      const key = new Date(t.created_at).toISOString().slice(0, 10);
+      const key = getLocalDateString(new Date(t.created_at));
       if (daily[key]) {
         daily[key].total += t.total || 0;
         daily[key].count += 1;

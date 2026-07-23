@@ -126,6 +126,9 @@ importers:
       '@dapur-kampoeng/sheets':
         specifier: workspace:*
         version: link:../sheets
+      '@dapur-kampoeng/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@supabase/supabase-js':
         specifier: ^2.110.7
         version: 2.110.7

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { formatRupiah } from "@dapur-kampoeng/utils";
+import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
 import {
   getDashboardSummary,
   getBestSeller,
@@ -23,7 +23,7 @@ export default function DashboardView({ onBack }: { onBack: () => void }) {
   const [loading, setLoading] = useState(true);
   const [periodStart, setPeriodStart] = useState(() => {
     const d = new Date();
-    return new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0, 10);
+    return getLocalDateString(new Date(d.getFullYear(), d.getMonth(), 1));
   });
 
   const fetchAll = useCallback(async () => {

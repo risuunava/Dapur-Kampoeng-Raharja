@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getAllMenu, createMenu, updateMenu, deleteMenu, uploadMenuImage, MenuItem } from "../../../lib/api";
-import { formatRupiah } from "@dapur-kampoeng/utils";
+import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
 
 interface MenuForm {
   name: string;
@@ -14,7 +14,7 @@ interface MenuForm {
 }
 
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return getLocalDateString();
 }
 
 const emptyForm: MenuForm = {
