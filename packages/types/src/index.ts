@@ -31,6 +31,7 @@ export interface Transaksi {
 export interface User {
   id: string;
   name: string;
-  role: 'admin' | 'kasir';
   username: string;
+  pin_hash: string;
+  role: 'admin' | 'kasir';
 }

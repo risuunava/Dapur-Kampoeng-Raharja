@@ -3,9 +3,9 @@ CREATE TABLE menu (
   name TEXT NOT NULL,
   price INTEGER NOT NULL,
   category TEXT NOT NULL,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
-  status TEXT NOT NULL DEFAULT 'tersedia'
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  status TEXT NOT NULL DEFAULT 'tersedia',
+  image_url TEXT
 );
 
 CREATE TABLE users (
