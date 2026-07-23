@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getMenu } from "../../../lib/api";
 import { formatRupiah } from "@dapur-kampoeng/utils";
 import { ShoppingCart } from "lucide-react";
@@ -52,21 +52,40 @@ export default function MenuView({
 }: MenuViewProps) {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
 
-  // Initial fetch — runs once on mount
-  useState(() => {
-    getMenu({ date: new Date().toISOString().slice(0, 10) }).then((res) => {
-      if (res.data) {
-        setMenuItems(res.data);
-        const cats = Array.from(new Set(res.data.map((m) => m.category))).sort();
-        setCategories(cats);
-      }
-      setLoading(false);
-    });
-  });
+  const fetchMenu = useCallback(async () => {
+    const res = await getMenu({ date: new Date().toISOString().slice(0, 10) });
+    if (res.data) {
+      setMenuItems(res.data);
+      const cats = Array.from(new Set(res.data.map((m) => m.category))).sort();
+      setCategories(cats);
+    }
+    setLoading(false);
+    setRefreshing(false);
+  }, []);
+
+  // Initial fetch & auto-refresh every 30s
+  useEffect(() => {
+    fetchMenu();
+    const interval = setInterval(fetchMenu, 30000);
+    return () => clearInterval(interval);
+  }, [fetchMenu]);
+
+  // Refetch on focus (tab becomes active again)
+  useEffect(() => {
+    const onFocus = () => fetchMenu();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [fetchMenu]);
+
+  function handleRefresh() {
+    setRefreshing(true);
+    fetchMenu();
+  }
 
   const filtered = menuItems.filter((m) => {
     if (search && !m.name.toLowerCase().includes(search.toLowerCase())) return false;
@@ -89,12 +108,21 @@ export default function MenuView({
           <h2 className="text-2xl font-display font-bold text-ink">Semua Menu</h2>
           <p className="text-sm text-muted">Pilih menu untuk pesanan pelanggan</p>
         </div>
-        <div className="w-64">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Cari menu..."
-          />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="px-3 py-2 rounded-md border border-line text-sm text-muted hover:text-ink hover:border-forest transition-colors duration-180 disabled:opacity-50"
+          >
+            {refreshing ? "Memuat..." : "Muat ulang"}
+          </button>
+          <div className="w-64">
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Cari menu..."
+            />
+          </div>
         </div>
       </div>
 
