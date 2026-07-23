@@ -49,13 +49,10 @@ export default function DashboardView({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="flex-1 flex flex-col bg-bg">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-line bg-surface">
-        <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-lg text-muted">&larr;</button>
-          <h2 className="font-semibold text-ink" style={{ fontFamily: "var(--font-display)" }}>
-            Dashboard Owner
-          </h2>
-        </div>
+      <div className="flex items-center justify-between px-6 py-5 border-b border-line bg-surface">
+        <h2 className="text-2xl font-bold text-ink font-display">
+          Dashboard Owner
+        </h2>
         <button
           onClick={fetchAll}
           className="text-xs text-muted hover:text-ink transition-colors duration-180"

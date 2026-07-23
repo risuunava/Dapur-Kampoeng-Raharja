@@ -145,11 +145,8 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-line">
-        <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-lg text-muted">&larr;</button>
-          <h2 className="font-semibold text-ink">Atur Menu</h2>
-        </div>
+      <div className="flex items-center justify-between px-6 py-5 border-b border-line">
+        <h2 className="text-2xl font-bold text-ink font-display">Manajemen Menu</h2>
         <button
           onClick={openAdd}
           className="px-4 py-2 rounded-sm bg-turmeric text-forest-dark font-semibold text-sm active:bg-turmeric-deep transition-colors duration-180"
