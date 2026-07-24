@@ -35,3 +35,34 @@ export interface User {
   pin_hash: string;
   role: 'admin' | 'kasir';
 }
+
+export interface ApiResponse<T> {
+  data: T;
+  error?: string;
+}
+
+export interface DashboardSummary {
+  total_transaksi_hari_ini: number;
+  total_pendapatan_hari_ini: number;
+  total_transaksi_bulan_ini: number;
+  total_pendapatan_bulan_ini: number;
+}
+
+export interface BestSellerItem {
+  name: string;
+  qty: number;
+  revenue: number;
+}
+
+export interface CategorySalesItem {
+  category: string;
+  qty: number;
+  revenue: number;
+  percentage: number;
+}
+
+export interface DailyTrendItem {
+  date: string;
+  total: number;
+  count: number;
+}

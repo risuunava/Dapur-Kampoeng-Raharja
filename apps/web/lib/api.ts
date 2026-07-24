@@ -1,19 +1,8 @@
+import type { ApiResponse, Menu } from '@dapur-kampoeng/types';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
-export interface MenuItem {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  date: string;
-  status: 'tersedia' | 'habis';
-  image_url?: string | null;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  error?: string;
-}
+export type { Menu as MenuItem } from '@dapur-kampoeng/types';
 
 async function fetchApi<T>(path: string): Promise<ApiResponse<T>> {
   try {
@@ -32,13 +21,13 @@ export async function getMenu(params?: {
   date?: string;
   status?: string;
   category?: string;
-}): Promise<ApiResponse<MenuItem[]>> {
+}): Promise<ApiResponse<Menu[]>> {
   const qs = new URLSearchParams();
   if (params?.date) qs.set('date', params.date);
   if (params?.status) qs.set('status', params.status);
   if (params?.category) qs.set('category', params.category);
   const query = qs.toString();
-  return fetchApi<MenuItem[]>(`/menu${query ? `?${query}` : ''}`);
+  return fetchApi<Menu[]>(`/menu${query ? `?${query}` : ''}`);
 }
 
 export async function getCategories(): Promise<string[]> {
