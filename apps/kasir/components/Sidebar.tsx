@@ -1,7 +1,7 @@
 "use client";
 
 import { LogOut, LayoutDashboard, ClipboardList, UtensilsCrossed, Store } from "lucide-react";
-import { ConnectionBadge } from "./StatusBadge";
+import { ConnectionBadge } from "@dapur-kampoeng/ui";
 
 interface SidebarProps {
   isAdmin: boolean;

@@ -22,6 +22,9 @@ importers:
       '@dapur-kampoeng/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@dapur-kampoeng/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@dapur-kampoeng/utils':
         specifier: workspace:*
         version: link:../../packages/utils

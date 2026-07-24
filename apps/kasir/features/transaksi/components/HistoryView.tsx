@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { formatRupiah } from "@dapur-kampoeng/utils";
 import { TransaksiLocal } from "../../../lib/local-db";
-import StatusBadge from "../../../components/StatusBadge";
+import { StatusBadge } from "@dapur-kampoeng/ui";
 import { ArrowLeft, RefreshCw, ClipboardList } from "lucide-react";
 
 type SyncStatus = TransaksiLocal["sync_status"];

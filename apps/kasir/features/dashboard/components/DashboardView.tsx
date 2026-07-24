@@ -13,7 +13,7 @@ import type {
   BestSellerItem,
   CategorySalesItem,
   DailyTrendItem,
-} from "../../../lib/api";
+} from "@dapur-kampoeng/types";
 
 export default function DashboardView({ onBack }: { onBack: () => void }) {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);

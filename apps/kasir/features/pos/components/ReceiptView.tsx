@@ -2,7 +2,7 @@
 
 import { formatRupiah } from "@dapur-kampoeng/utils";
 import { TransaksiLocal } from "../../../lib/local-db";
-import StatusBadge from "../../../components/StatusBadge";
+import { StatusBadge } from "@dapur-kampoeng/ui";
 import { Receipt, PlusCircle } from "lucide-react";
 
 interface CartItem {

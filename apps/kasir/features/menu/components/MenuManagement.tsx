@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getAllMenu, createMenu, updateMenu, deleteMenu, uploadMenuImage, MenuItem } from "../../../lib/api";
+import { getAllMenu, createMenu, updateMenu, deleteMenu, uploadMenuImage } from "../../../lib/api";
+import type { Menu } from "@dapur-kampoeng/types";
 import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
 
 interface MenuForm {
@@ -27,7 +28,7 @@ const emptyForm: MenuForm = {
 };
 
 export default function MenuManagement({ onBack }: { onBack: () => void }) {
-  const [menus, setMenus] = useState<MenuItem[]>([]);
+  const [menus, setMenus] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [modal, setModal] = useState<null | "add" | "edit">(null);
@@ -62,7 +63,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
     setModal("add");
   }
 
-  function openEdit(item: MenuItem) {
+  function openEdit(item: Menu) {
     setForm({
       name: item.name,
       price: String(item.price),
@@ -133,7 +134,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
     fetchMenus();
   }
 
-  async function handleToggleStatus(item: MenuItem) {
+  async function handleToggleStatus(item: Menu) {
     const newStatus = item.status === "tersedia" ? "habis" : "tersedia";
     const result = await updateMenu(item.id, { status: newStatus });
     if (result.error) {

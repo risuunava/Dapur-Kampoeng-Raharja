@@ -1,8 +1,7 @@
 "use client";
 
 import { LogOut, LayoutDashboard, ClipboardList, UtensilsCrossed } from "lucide-react";
-import { ConnectionBadge } from "./StatusBadge";
-import Button from "./Button";
+import { ConnectionBadge, Button } from "@dapur-kampoeng/ui";
 
 interface HeaderProps {
   userName: string;

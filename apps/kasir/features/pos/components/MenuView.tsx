@@ -2,20 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getMenu } from "../../../lib/api";
-import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
+import { getLocalDateString } from "@dapur-kampoeng/utils";
+import type { Menu } from "@dapur-kampoeng/types";
 import { ShoppingCart } from "lucide-react";
 import SearchInput from "../../../components/SearchInput";
 import CategoryChip from "../../../components/CategoryChip";
-import MenuCard from "../../../components/MenuCard";
-
-interface MenuItem {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  status: string;
-  image_url?: string | null;
-}
+import { MenuCard } from "@dapur-kampoeng/ui";
 
 interface CartItem {
   menu_id: string;
@@ -24,20 +16,14 @@ interface CartItem {
   qty: number;
 }
 
-interface UserInfo {
-  id: string;
-  name: string;
-  role: string;
-}
-
 interface MenuViewProps {
-  user: UserInfo;
+  user: { id: string; name: string; role: string };
   cart: CartItem[];
   setCart: (c: CartItem[]) => void;
   onViewCart: () => void;
 }
 
-function updateCart(cart: CartItem[], item: { id: string; name: string; price: number }): CartItem[] {
+function updateCart(cart: CartItem[], item: Menu): CartItem[] {
   const existing = cart.find((c) => c.menu_id === item.id);
   if (existing) {
     return cart.map((c) =>
@@ -50,7 +36,7 @@ function updateCart(cart: CartItem[], item: { id: string; name: string; price: n
 export default function MenuView({
   cart, setCart, onViewCart,
 }: MenuViewProps) {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [menuItems, setMenuItems] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
@@ -93,7 +79,7 @@ export default function MenuView({
     return true;
   });
 
-  function handleSelect(item: MenuItem) {
+  function handleSelect(item: Menu) {
     if (item.status === "habis") return;
     setCart(updateCart(cart, item));
   }
