@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
 import { getMenu, getCategories, MenuItem } from "../../lib/api";
-import { formatRupiah, getLocalDateString } from "@dapur-kampoeng/utils";
+import { getLocalDateString } from "@dapur-kampoeng/utils";
+import { MenuCard } from "@dapur-kampoeng/ui";
 
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
@@ -45,48 +45,25 @@ function getDishImage(id: string) {
 }
 
 function MenuCardItem({ item, upcoming }: { item: MenuItem; upcoming?: boolean }) {
-    const isHabis = item.status === 'habis' && !upcoming;
-    return (
-      <div className="bg-surface rounded-xl md:rounded-2xl overflow-hidden shadow-card border border-line/50 group flex flex-col transition-shadow hover:shadow-lg">
-        <div className="relative w-full h-28 sm:h-36 md:h-48 bg-line/20 overflow-hidden">
-          <img 
-            src={item.image_url || getDishImage(item.id)}
-            alt={item.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          {isHabis && (
-            <div className="absolute inset-0 bg-ink/50 flex items-center justify-center backdrop-blur-sm">
-              <span className="bg-chili text-white px-3 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold tracking-widest uppercase shadow-lg">Sold Out</span>
-            </div>
-          )}
-          {upcoming && (
-            <div className="absolute top-2 left-2 md:top-3 md:left-3">
-              <span className="bg-turmeric text-forest-dark px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-bold shadow-lg">
-                Siap {formatDateLabel(item.date)}
-              </span>
-            </div>
-          )}
-        </div>
-        <div className="p-3 md:p-5 flex-1 flex flex-col justify-between">
-          <div>
-            <h3 className="font-bold text-ink text-xs md:text-base uppercase tracking-wide truncate mb-1" title={item.name}>{item.name}</h3>
-            <p className="text-[10px] md:text-xs text-muted leading-relaxed line-clamp-2 mb-2 md:mb-4">
-              {upcoming
-                ? `Hidangan ${item.category.toLowerCase()} khas Nusantara, siap ${formatDateLabel(item.date)}.`
-                : `Hidangan khas ${item.category.toLowerCase()} yang disiapkan dengan bumbu pilihan Nusantara.`
-              }
-            </p>
-          </div>
-          <div className="mt-auto">
-            <p className="font-bold text-xs md:text-sm text-ink flex items-baseline gap-1">
-              <span className="text-[10px] md:text-xs text-muted font-normal uppercase">Harga:</span> 
-              <span className="text-turmeric">{formatRupiah(item.price)}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const itemWithImage = {
+    ...item,
+    image_url: item.image_url || getDishImage(item.id),
+  };
+
+  return (
+    <MenuCard
+      item={itemWithImage}
+      variant="display"
+      upcoming={upcoming}
+      dateLabel={upcoming ? `Siap ${formatDateLabel(item.date)}` : undefined}
+      description={
+        upcoming
+          ? `Hidangan ${item.category.toLowerCase()} khas Nusantara, siap ${formatDateLabel(item.date)}.`
+          : `Hidangan khas ${item.category.toLowerCase()} yang disiapkan dengan bumbu pilihan Nusantara.`
+      }
+    />
+  );
+}
 
 export default function Home() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
