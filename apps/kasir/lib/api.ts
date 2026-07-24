@@ -1,30 +1,11 @@
+import type {
+  ApiResponse, Menu, Transaksi as TransaksiData,
+  DashboardSummary, BestSellerItem, CategorySalesItem, DailyTrendItem,
+} from '@dapur-kampoeng/types';
+
+export type { Menu as MenuItem } from '@dapur-kampoeng/types';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-
-export interface MenuItem {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  date: string;
-  status: 'tersedia' | 'habis';
-  image_url?: string | null;
-}
-
-export interface TransaksiData {
-  id: string;
-  invoice: string | null;
-  items: Array<{ menu_id: string; name: string; qty: number; price: number }>;
-  total: number;
-  created_at: string;
-  kasir_id: string;
-  device_id: string;
-  sync_status: string;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  error?: string;
-}
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -64,16 +45,16 @@ export async function login(
 export async function getMenu(params?: {
   date?: string;
   status?: string;
-}): Promise<ApiResponse<MenuItem[]>> {
+}): Promise<ApiResponse<Menu[]>> {
   const qs = new URLSearchParams();
   if (params?.date) qs.set('date', params.date);
   if (params?.status) qs.set('status', params.status);
   const query = qs.toString();
-  return fetchApi<MenuItem[]>(`/menu${query ? `?${query}` : ''}`);
+  return fetchApi<Menu[]>(`/menu${query ? `?${query}` : ''}`);
 }
 
-export async function getAllMenu(): Promise<ApiResponse<MenuItem[]>> {
-  return fetchApi<MenuItem[]>('/menu');
+export async function getAllMenu(): Promise<ApiResponse<Menu[]>> {
+  return fetchApi<Menu[]>('/menu');
 }
 
 export async function createMenu(data: {
@@ -82,8 +63,8 @@ export async function createMenu(data: {
   category: string;
   date: string;
   status: 'tersedia' | 'habis';
-}): Promise<ApiResponse<MenuItem>> {
-  return fetchApi<MenuItem>('/menu', {
+}): Promise<ApiResponse<Menu>> {
+  return fetchApi<Menu>('/menu', {
     method: 'POST',
     body: JSON.stringify(data),
   });
@@ -98,8 +79,8 @@ export async function updateMenu(
     date: string;
     status: 'tersedia' | 'habis';
   }>
-): Promise<ApiResponse<MenuItem>> {
-  return fetchApi<MenuItem>(`/menu/${id}`, {
+): Promise<ApiResponse<Menu>> {
+  return fetchApi<Menu>(`/menu/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   });
@@ -107,32 +88,6 @@ export async function updateMenu(
 
 export async function deleteMenu(id: string): Promise<ApiResponse<null>> {
   return fetchApi<null>(`/menu/${id}`, { method: 'DELETE' });
-}
-
-export interface DashboardSummary {
-  total_transaksi_hari_ini: number;
-  total_pendapatan_hari_ini: number;
-  total_transaksi_bulan_ini: number;
-  total_pendapatan_bulan_ini: number;
-}
-
-export interface BestSellerItem {
-  name: string;
-  qty: number;
-  revenue: number;
-}
-
-export interface CategorySalesItem {
-  category: string;
-  qty: number;
-  revenue: number;
-  percentage: number;
-}
-
-export interface DailyTrendItem {
-  date: string;
-  total: number;
-  count: number;
 }
 
 export async function getDashboardSummary(): Promise<ApiResponse<DashboardSummary>> {
@@ -159,14 +114,13 @@ export async function getDailyTrend(days = 7): Promise<ApiResponse<DailyTrendIte
   return fetchApi<DailyTrendItem[]>(`/dashboard/daily-trend?days=${days}`);
 }
 
-const API_URL_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-
 export async function uploadMenuImage(file: File): Promise<ApiResponse<{ url: string }>> {
   const token = getToken();
   const formData = new FormData();
   formData.append('image', file);
 
   try {
+    const API_URL_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
     const res = await fetch(`${API_URL_BASE}/upload/menu`, {
       method: 'POST',
       headers: token ? { Authorization: `Bearer ${token}` } : {},
