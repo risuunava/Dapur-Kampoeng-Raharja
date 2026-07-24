@@ -4,5 +4,20 @@
   "private": true,
   "main": "src/index.tsx",
   "types": "src/index.tsx",
-  "scripts": {}
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dapur-kampoeng/utils": "workspace:*",
+    "lucide-react": "^1.25.0"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
 }
