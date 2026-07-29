@@ -146,11 +146,11 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex items-center justify-between px-6 py-5 border-b border-line">
-        <h2 className="text-2xl font-bold text-ink font-display">Manajemen Menu</h2>
+      <div className="flex items-center justify-between px-4 md:px-6 py-4 md:py-5 border-b border-line">
+        <h2 className="text-lg md:text-2xl font-bold text-ink font-display">Manajemen Menu</h2>
         <button
           onClick={openAdd}
-          className="px-4 py-2 rounded-sm bg-turmeric text-forest-dark font-semibold text-sm active:bg-turmeric-deep transition-colors duration-180"
+          className="px-4 py-2.5 md:px-4 md:py-2 rounded-sm bg-turmeric text-forest-dark font-semibold text-xs md:text-sm active:bg-turmeric-deep transition-colors duration-180 min-h-[40px]"
         >
           + Tambah
         </button>
@@ -162,7 +162,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-3 md:px-4 py-3 md:py-4">
         {loading && <p className="text-center text-muted py-8">Memuat menu...</p>}
 
         {!loading && menus.length === 0 && (
@@ -170,7 +170,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
             <p className="text-muted mb-4">Belum ada menu. Tambah menu sekarang.</p>
             <button
               onClick={openAdd}
-              className="px-6 py-3 rounded-sm bg-turmeric text-forest-dark font-semibold"
+              className="px-6 py-3 rounded-sm bg-turmeric text-forest-dark font-semibold text-sm min-h-[44px]"
             >
               + Tambah Menu
             </button>
@@ -184,16 +184,16 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
               return (
                 <div
                   key={item.id}
-                  className={`flex items-center gap-3 bg-surface rounded-sm p-3 border transition-colors duration-180 ${
+                  className={`flex items-stretch md:items-center gap-2 bg-surface rounded-sm p-3 border transition-colors duration-180 ${
                     isHabis ? "border-line/50 opacity-70" : "border-line"
                   }`}
                 >
                   {item.image_url && (
-                    <div className="w-12 h-12 rounded-sm overflow-hidden shrink-0 border border-line">
+                    <div className="w-12 h-12 rounded-sm overflow-hidden shrink-0 border border-line self-center">
                       <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                   )}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 self-center">
                     <p className="font-semibold text-ink text-sm truncate">{item.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-xs font-bold text-forest" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -208,30 +208,32 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                     </p>
                   </div>
 
-                  <button
-                    onClick={() => handleToggleStatus(item)}
-                    className={`px-2.5 py-1 rounded-sm text-[11px] font-semibold transition-colors duration-180 ${
-                      isHabis
-                        ? "bg-forest/10 text-forest active:bg-forest/20"
-                        : "bg-chili/10 text-chili active:bg-chili/20"
-                    }`}
-                  >
-                    {isHabis ? "Tersedia" : "Habis"}
-                  </button>
+                  <div className="flex flex-col md:flex-row items-stretch md:items-center gap-1.5 shrink-0">
+                    <button
+                      onClick={() => handleToggleStatus(item)}
+                      className={`px-3 py-2 md:px-2.5 md:py-1 rounded-sm text-[11px] font-semibold transition-colors duration-180 min-h-[36px] md:min-h-0 ${
+                        isHabis
+                          ? "bg-forest/10 text-forest active:bg-forest/20"
+                          : "bg-chili/10 text-chili active:bg-chili/20"
+                      }`}
+                    >
+                      {isHabis ? "Tersedia" : "Habis"}
+                    </button>
 
-                  <button
-                    onClick={() => openEdit(item)}
-                    className="px-2.5 py-1 rounded-sm text-[11px] font-semibold bg-surface text-muted border border-line active:bg-line transition-colors duration-180"
-                  >
-                    Edit
-                  </button>
+                    <button
+                      onClick={() => openEdit(item)}
+                      className="px-3 py-2 md:px-2.5 md:py-1 rounded-sm text-[11px] font-semibold bg-surface text-muted border border-line active:bg-line transition-colors duration-180 min-h-[36px] md:min-h-0"
+                    >
+                      Edit
+                    </button>
 
-                  <button
-                    onClick={() => setDeleteConfirm(item.id)}
-                    className="px-2.5 py-1 rounded-sm text-[11px] font-semibold text-chili bg-chili/5 border border-chili/20 active:bg-chili/10 transition-colors duration-180"
-                  >
-                    Hapus
-                  </button>
+                    <button
+                      onClick={() => setDeleteConfirm(item.id)}
+                      className="px-3 py-2 md:px-2.5 md:py-1 rounded-sm text-[11px] font-semibold text-chili bg-chili/5 border border-chili/20 active:bg-chili/10 transition-colors duration-180 min-h-[36px] md:min-h-0"
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -241,11 +243,16 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
 
       {/* Modal Tambah/Edit */}
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-surface rounded-md w-full max-w-md border border-line p-6" style={{ boxShadow: "var(--shadow-card)" }}>
-            <h3 className="font-semibold text-ink text-base mb-4" style={{ fontFamily: "var(--font-display)" }}>
-              {editingId ? "Edit Menu" : "Tambah Menu"}
-            </h3>
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/30 p-0 md:p-4">
+          <div className="bg-surface rounded-t-2xl md:rounded-md w-full md:max-w-md border-0 md:border border-line p-5 md:p-6 max-h-[90vh] overflow-y-auto" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-ink text-base" style={{ fontFamily: "var(--font-display)" }}>
+                {editingId ? "Edit Menu" : "Tambah Menu"}
+              </h3>
+              <button onClick={closeModal} className="w-8 h-8 flex items-center justify-center text-muted hover:text-ink md:hidden">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
 
             <div className="space-y-3">
               <div>
@@ -254,7 +261,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
+                  className="w-full px-3 py-3 md:py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric min-h-[44px]"
                   placeholder="Nasi Goreng"
                 />
               </div>
@@ -265,7 +272,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                   type="number"
                   value={form.price}
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
-                  className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
+                  className="w-full px-3 py-3 md:py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric min-h-[44px]"
                   placeholder="15000"
                 />
               </div>
@@ -273,7 +280,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
               <div>
                 <label className="block text-xs text-muted mb-1">Foto Menu</label>
                 <div className="flex items-center gap-3">
-                  <label className="flex-1 px-3 py-2 rounded-sm border border-line bg-bg text-sm text-muted cursor-pointer hover:border-turmeric transition-colors duration-180">
+                  <label className="flex-1 px-3 py-3 md:py-2 rounded-sm border border-line bg-bg text-sm text-muted cursor-pointer hover:border-turmeric transition-colors duration-180 min-h-[44px] flex items-center">
                     {imageFile ? imageFile.name : "Pilih Gambar"}
                     <input
                       type="file"
@@ -295,7 +302,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                         setImagePreview("");
                         setForm({ ...form, image_url: "" });
                       }}
-                      className="text-xs text-chili shrink-0"
+                      className="text-xs text-chili shrink-0 min-h-[44px] px-2"
                     >
                       Hapus
                     </button>
@@ -318,7 +325,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                   type="text"
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
+                  className="w-full px-3 py-3 md:py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric min-h-[44px]"
                   placeholder="Makanan"
                 />
               </div>
@@ -329,7 +336,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                   type="date"
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="w-full px-3 py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric"
+                  className="w-full px-3 py-3 md:py-2 rounded-sm border border-line bg-bg text-ink text-sm focus:outline-none focus:border-turmeric min-h-[44px]"
                 />
               </div>
 
@@ -338,7 +345,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setForm({ ...form, status: "tersedia" })}
-                    className={`flex-1 py-2 rounded-sm text-sm font-medium transition-colors duration-180 ${
+                    className={`flex-1 py-3 md:py-2 rounded-sm text-sm font-medium transition-colors duration-180 min-h-[44px] ${
                       form.status === "tersedia"
                         ? "bg-forest text-white"
                         : "bg-surface text-muted border border-line"
@@ -348,7 +355,7 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
                   </button>
                   <button
                     onClick={() => setForm({ ...form, status: "habis" })}
-                    className={`flex-1 py-2 rounded-sm text-sm font-medium transition-colors duration-180 ${
+                    className={`flex-1 py-3 md:py-2 rounded-sm text-sm font-medium transition-colors duration-180 min-h-[44px] ${
                       form.status === "habis"
                         ? "bg-chili text-white"
                         : "bg-surface text-muted border border-line"
@@ -360,17 +367,17 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-5">
               <button
                 onClick={closeModal}
-                className="flex-1 py-2.5 rounded-sm border border-line text-muted font-medium text-sm active:bg-line transition-colors duration-180"
+                className="flex-1 py-3 md:py-2.5 rounded-sm border border-line text-muted font-medium text-sm active:bg-line transition-colors duration-180 min-h-[44px]"
               >
                 Batal
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving || !form.name || !form.price || !form.category || !form.date}
-                className="flex-1 py-2.5 rounded-sm bg-turmeric text-forest-dark font-semibold text-sm disabled:opacity-50 transition-colors duration-180 active:bg-turmeric-deep"
+                className="flex-1 py-3 md:py-2.5 rounded-sm bg-turmeric text-forest-dark font-semibold text-sm disabled:opacity-50 transition-colors duration-180 active:bg-turmeric-deep min-h-[44px]"
               >
                 {saving ? "Menyimpan..." : "Simpan"}
               </button>
@@ -381,20 +388,21 @@ export default function MenuManagement({ onBack }: { onBack: () => void }) {
 
       {/* Konfirmasi Hapus */}
       {deleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-surface rounded-md w-full max-w-xs border border-line p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/30 p-0 md:p-4">
+          <div className="bg-surface rounded-t-2xl md:rounded-md w-full md:max-w-xs border-0 md:border border-line p-5 md:p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="w-10 h-1.5 bg-line/50 rounded-full mx-auto mb-4 md:hidden" />
             <p className="text-ink font-semibold mb-2">Hapus menu ini?</p>
             <p className="text-sm text-muted mb-6">Tindakan ini tidak bisa dibatalkan.</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2.5 rounded-sm border border-line text-muted font-medium text-sm active:bg-line transition-colors duration-180"
+                className="flex-1 py-3 md:py-2.5 rounded-sm border border-line text-muted font-medium text-sm active:bg-line transition-colors duration-180 min-h-[44px]"
               >
                 Batal
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 py-2.5 rounded-sm bg-chili text-white font-semibold text-sm active:bg-chili/80 transition-colors duration-180"
+                className="flex-1 py-3 md:py-2.5 rounded-sm bg-chili text-white font-semibold text-sm active:bg-chili/80 transition-colors duration-180 min-h-[44px]"
               >
                 Hapus
               </button>

@@ -88,21 +88,21 @@ export default function MenuView({
   const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   return (
-    <div className="flex-1 flex flex-col p-6 md:p-8">
-      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="flex-1 flex flex-col p-4 md:p-6 lg:p-8">
+      <div className="mb-4 md:mb-8 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-display font-bold text-ink">Semua Menu</h2>
-          <p className="text-sm md:text-base text-muted mt-1">Pilih menu untuk pesanan pelanggan</p>
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-display font-bold text-ink">Semua Menu</h2>
+          <p className="text-xs md:text-sm text-muted mt-0.5 md:mt-1">Pilih menu untuk pesanan pelanggan</p>
         </div>
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-2 w-full md:w-auto">
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="px-5 py-3 rounded-full border border-line bg-surface text-sm font-medium text-ink hover:text-forest hover:border-forest transition-colors duration-180 disabled:opacity-50 shadow-sm min-h-[44px]"
+            className="px-3 md:px-5 py-2.5 md:py-3 rounded-full border border-line bg-surface text-xs md:text-sm font-medium text-ink hover:text-forest hover:border-forest transition-colors duration-180 disabled:opacity-50 shadow-sm min-h-[40px] md:min-h-[44px]"
           >
             {refreshing ? "Memuat..." : "Muat ulang"}
           </button>
-          <div className="w-full md:w-72">
+          <div className="flex-1 md:w-72">
             <SearchInput
               value={search}
               onChange={setSearch}
@@ -112,7 +112,7 @@ export default function MenuView({
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-thin">
+      <div className="flex gap-1.5 md:gap-2 overflow-x-auto pb-3 mb-1 scrollbar-thin">
         <CategoryChip
           label="Semua"
           active={!category}
@@ -130,7 +130,7 @@ export default function MenuView({
 
       <div className="flex-1 overflow-y-auto pb-6">
         {loading && (
-          <div className="grid grid-cols-3 gap-2 py-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 py-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
@@ -148,13 +148,13 @@ export default function MenuView({
         )}
 
         {!loading && filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-muted">
-            <ShoppingCart className="w-10 h-10 mb-3 opacity-40" />
-            <p className="text-sm">Menu tidak ditemukan</p>
+          <div className="flex flex-col items-center justify-center py-12 md:py-16 text-muted">
+            <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 mb-2 md:mb-3 opacity-40" />
+            <p className="text-xs md:text-sm">Menu tidak ditemukan</p>
           </div>
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 animate-fade-in">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 animate-fade-in">
           {filtered.map((item) => (
             <MenuCard key={item.id} item={item} onSelect={handleSelect} />
           ))}

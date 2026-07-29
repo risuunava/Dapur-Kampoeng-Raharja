@@ -48,30 +48,30 @@ export default function HistoryView({
 
   return (
     <div className="flex-1 flex flex-col animate-fade-in">
-      <div className="flex items-center justify-between px-6 py-5 border-b border-line bg-surface">
+      <div className="flex items-center justify-between px-4 md:px-6 py-4 md:py-5 border-b border-line bg-surface">
         <h2
-          className="text-2xl font-bold text-ink font-display"
+          className="text-lg md:text-2xl font-bold text-ink font-display"
         >
           Riwayat Transaksi
         </h2>
         <button
           onClick={handleRefresh}
           disabled={refreshing}
-          className="text-xs text-muted hover:text-ink transition-colors duration-180 flex items-center gap-1"
+          className="text-xs text-muted hover:text-ink transition-colors duration-180 flex items-center gap-1 px-2 py-2 min-h-[40px]"
         >
           <RefreshCw
             className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`}
           />
-          Muat ulang
+          <span className="hidden sm:inline">Muat ulang</span>
         </button>
       </div>
 
-      <div className="flex gap-2 px-4 py-2 overflow-x-auto border-b border-line bg-surface/50">
+      <div className="flex gap-2 px-4 py-3 overflow-x-auto border-b border-line bg-surface/50">
         {filterOptions.map((f) => (
           <button
             key={f.key}
             onClick={() => setStatusFilter(f.key)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-180 active:scale-95 ${
+            className={`px-4 py-2.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-180 active:scale-95 min-h-[40px] ${
               statusFilter === f.key
                 ? "bg-forest text-white shadow-sm"
                 : "bg-surface text-muted border border-line hover:border-forest/30"
@@ -84,19 +84,19 @@ export default function HistoryView({
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-muted">
-            <ClipboardList className="w-10 h-10 mb-3 opacity-40" />
-            <p className="text-sm">Belum ada transaksi</p>
+          <div className="flex flex-col items-center justify-center py-12 text-muted">
+            <ClipboardList className="w-8 h-8 md:w-10 md:h-10 mb-2 md:mb-3 opacity-40" />
+            <p className="text-xs md:text-sm">Belum ada transaksi</p>
           </div>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-2 md:space-y-2">
           {filtered.map((t) => {
             const status = syncStatuses[t.id] || t.sync_status;
             return (
               <div
                 key={t.id}
-                className="bg-surface rounded-md p-3 border border-line hover:shadow-md transition-all duration-180"
+                className="bg-surface rounded-md p-3 md:p-3 border border-line hover:shadow-md transition-all duration-180"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <div className="flex items-start justify-between">
@@ -133,7 +133,7 @@ export default function HistoryView({
                   {status === "failed" && (
                     <button
                       onClick={() => onRetry(t.id)}
-                      className="ml-2 px-2.5 py-1 rounded-md text-[11px] font-semibold text-chili bg-chili/5 border border-chili/20 active:bg-chili/10 active:scale-95 transition-all duration-180 shrink-0"
+                      className="ml-2 px-3 py-2 rounded-md text-xs font-semibold text-chili bg-chili/5 border border-chili/20 active:bg-chili/10 active:scale-95 transition-all duration-180 shrink-0 min-h-[40px]"
                     >
                       Retry
                     </button>
