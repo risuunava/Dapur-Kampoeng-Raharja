@@ -5,6 +5,7 @@ import { getMenu } from "../../../lib/api";
 import { getLocalDateString } from "@dapur-kampoeng/utils";
 import type { Menu } from "@dapur-kampoeng/types";
 import { ShoppingCart } from "lucide-react";
+import { formatRupiah } from "@dapur-kampoeng/utils";
 import SearchInput from "../../../components/SearchInput";
 import CategoryChip from "../../../components/CategoryChip";
 import { MenuCard, type MenuItemData } from "@dapur-kampoeng/ui";
@@ -161,6 +162,31 @@ export default function MenuView({
         </div>
       </div>
 
+      {/* Mobile/Tablet Cart Bottom Bar — only when items in cart */}
+      {cart.length > 0 && (
+        <div className="sticky bottom-0 mt-auto bg-surface border-t border-line px-4 py-3 flex items-center justify-between gap-3 shadow-lg shadow-ink/5 animate-slide-up lg:hidden">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative">
+              <ShoppingCart className="w-5 h-5 text-forest" />
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-chili text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                {totalItems > 9 ? "9+" : totalItems}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-muted">{totalItems} item</p>
+              <p className="text-sm font-bold text-ink" style={{ fontVariantNumeric: "tabular-nums" }}>
+                {formatRupiah(totalPrice)}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onViewCart}
+            className="px-6 py-3 rounded-full bg-forest text-white font-bold text-sm transition-all duration-180 active:scale-[0.97] hover:bg-forest-dark shadow-md shadow-forest/20 min-h-[44px]"
+          >
+            Lihat Keranjang
+          </button>
+        </div>
+      )}
     </div>
   );
 }
