@@ -169,19 +169,19 @@ export default function KasirApp() {
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {view !== "login" && user && (
-          <header className="h-20 border-b border-line/30 flex items-center justify-between px-8 bg-surface shrink-0 hidden md:flex">
+          <header className="h-20 border-b border-line/50 flex items-center justify-between px-8 bg-bg/90 backdrop-blur-md shrink-0 hidden md:flex sticky top-0 z-50">
             <div>
-              <p className="text-sm text-muted">
-                {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              <p className="text-sm text-muted font-medium">
+                {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
-              <h2 className="text-xl font-bold text-ink">Welcome, {user.name}!</h2>
+              <h2 className="text-xl font-display font-bold text-ink">Welcome, {user.name}!</h2>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex flex-col text-right">
                 <span className="text-sm font-bold text-ink">{user.name}</span>
                 <span className="text-xs text-muted capitalize">{user.role}</span>
               </div>
-              <div className="w-10 h-10 rounded-full bg-forest text-white flex items-center justify-center font-bold text-lg">
+              <div className="w-10 h-10 rounded-full bg-forest text-white flex items-center justify-center font-bold text-lg shadow-sm border border-forest-dark/20">
                 {user.name.charAt(0).toUpperCase()}
               </div>
             </div>
@@ -256,7 +256,7 @@ export default function KasirApp() {
 
           {/* Right Cart Sidebar (Visible on desktop when in menu and cart is not empty) */}
           {view === "menu" && user && cart.length > 0 && (
-            <div className="w-[400px] bg-surface border-l border-line/30 hidden lg:flex flex-col shrink-0 h-full overflow-hidden animate-slide-left">
+            <div className="w-[400px] bg-surface border-l border-line/50 hidden lg:flex flex-col shrink-0 h-full overflow-hidden animate-slide-left shadow-xl shadow-ink/5 z-40">
               <CartView
                 cart={cart}
                 setCart={setCart}

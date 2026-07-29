@@ -8,6 +8,7 @@ export interface MenuItemData {
   price: number;
   category: string;
   status: string;
+  date?: string;
   image_url?: string | null;
 }
 
@@ -32,13 +33,13 @@ export default function MenuCard({
 
   if (variant === "display") {
     return (
-      <div className="bg-surface rounded-xl md:rounded-2xl overflow-hidden shadow-card border border-line/50 group flex flex-col transition-shadow hover:shadow-lg">
-        <div className="relative w-full h-28 sm:h-36 md:h-48 bg-line/20 overflow-hidden">
+      <div className="bg-surface rounded-xl md:rounded-2xl overflow-hidden shadow-card border border-line/50 flex flex-col transition-shadow hover:shadow-lg">
+        <div className="relative w-full h-32 sm:h-40 md:h-52 bg-line/20 overflow-hidden">
           {item.image_url && (
             <img
               src={item.image_url}
               alt={item.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover"
             />
           )}
           {soldOut && (
@@ -56,22 +57,22 @@ export default function MenuCard({
             </div>
           )}
         </div>
-        <div className="p-3 md:p-5 flex-1 flex flex-col justify-between">
-          <div>
-            <h3 className="font-bold text-ink text-xs md:text-base uppercase tracking-wide truncate mb-1" title={item.name}>
+        <div className="p-4 md:p-6 flex-1 flex flex-col justify-between bg-white">
+          <div className="mb-4">
+            <h3 className="font-extrabold text-ink text-sm md:text-lg uppercase tracking-wider mb-2 line-clamp-2" title={item.name}>
               {item.name}
             </h3>
             {description && (
-              <p className="text-[10px] md:text-xs text-muted leading-relaxed line-clamp-2 mb-2 md:mb-4">
+              <p className="text-xs md:text-sm text-muted leading-relaxed line-clamp-3">
                 {description}
               </p>
             )}
           </div>
-          <div className="mt-auto">
-            <p className="font-bold text-xs md:text-sm text-ink flex items-baseline gap-1">
-              <span className="text-[10px] md:text-xs text-muted font-normal uppercase">Harga:</span>
-              <span className="text-turmeric tabular-nums">{formatRupiah(item.price)}</span>
-            </p>
+          <div className="mt-auto pt-4 border-t border-line/30">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] md:text-xs text-muted font-semibold uppercase tracking-widest">Harga</span>
+              <span className="font-bold text-sm md:text-lg text-forest tabular-nums">{formatRupiah(item.price)}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -82,27 +83,27 @@ export default function MenuCard({
     <button
       onClick={() => onSelect?.(item)}
       disabled={soldOut}
-      className={`relative rounded-md text-left transition-all duration-180 overflow-hidden ${
+      className={`relative rounded-md text-left transition-shadow duration-180 overflow-hidden ${
         soldOut
           ? "bg-surface/50 border border-line/50 opacity-60 cursor-not-allowed"
-          : "bg-surface border border-line hover:shadow-md hover:-translate-y-0.5 active:scale-[0.97] active:border-turmeric cursor-pointer"
+          : "bg-surface border border-line hover:shadow-md active:border-turmeric cursor-pointer"
       }`}
       style={{ boxShadow: "var(--shadow-card)", minHeight: 128 }}
     >
       {item.image_url && (
-        <div className="w-full h-20 overflow-hidden bg-bg">
+        <div className="w-full h-24 md:h-32 overflow-hidden bg-bg">
           <img
             src={item.image_url}
             alt={item.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-cover"
           />
         </div>
       )}
-      <div className="p-2.5">
-        <p className="text-sm font-semibold text-ink leading-tight mb-1 line-clamp-2">
+      <div className="p-3 md:p-4 flex flex-col justify-between bg-white h-full">
+        <p className="text-sm md:text-base font-bold text-ink leading-tight mb-2 line-clamp-2">
           {item.name}
         </p>
-        <p className="text-xs font-bold text-forest tabular-nums">
+        <p className="text-sm font-extrabold text-forest tabular-nums mt-auto">
           {formatRupiah(item.price)}
         </p>
       </div>

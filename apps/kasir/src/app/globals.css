@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@source "../../../../packages/ui/src";
 @theme inline {
   --color-bg: #FBF8F1;
   --color-surface: #FFFFFF;

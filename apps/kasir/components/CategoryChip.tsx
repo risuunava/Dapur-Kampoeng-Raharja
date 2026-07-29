@@ -10,10 +10,10 @@ export default function CategoryChip({ label, active, onClick }: CategoryChipPro
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-180 active:scale-95 ${
+      className={`px-5 py-2 md:px-6 md:py-2.5 rounded-full text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-180 active:scale-95 ${
         active
-          ? "bg-forest text-white shadow-sm"
-          : "bg-surface text-muted border border-line hover:border-forest/30 active:bg-line"
+          ? "bg-forest text-white shadow-md"
+          : "bg-surface text-muted border border-line hover:border-forest hover:text-ink hover:shadow-sm active:bg-line"
       }`}
     >
       {label}

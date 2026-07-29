@@ -122,7 +122,7 @@ export default function CartView({
         {cart.map((item) => (
           <div
             key={item.menu_id}
-            className="flex items-center justify-between bg-surface rounded-md p-3 border border-line hover:shadow-md transition-shadow duration-180"
+            className="flex items-center justify-between bg-surface rounded-xl p-3 border border-line hover:shadow-md transition-shadow duration-180"
             style={{ boxShadow: "var(--shadow-card)" }}
           >
             <div className="flex-1 min-w-0">
@@ -140,7 +140,7 @@ export default function CartView({
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => updateQty(item.menu_id, -1)}
-                className="w-9 h-9 flex items-center justify-center rounded-md border border-line text-ink font-bold hover:bg-line active:scale-90 transition-all duration-180"
+                className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full border border-line text-ink font-bold hover:bg-line active:scale-90 transition-all duration-180"
               >
                 <Minus className="w-3.5 h-3.5" />
               </button>
@@ -152,7 +152,7 @@ export default function CartView({
               </span>
               <button
                 onClick={() => updateQty(item.menu_id, 1)}
-                className="w-9 h-9 flex items-center justify-center rounded-md bg-turmeric text-forest-dark font-bold hover:bg-turmeric-deep active:scale-90 transition-all duration-180"
+                className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-turmeric text-forest-dark font-bold hover:bg-turmeric-deep active:scale-90 transition-all duration-180"
               >
                 <Plus className="w-3.5 h-3.5" />
               </button>
@@ -169,7 +169,7 @@ export default function CartView({
       </div>
 
       <div className="p-6 bg-surface border-t border-line space-y-4 animate-slide-up">
-        <h3 className="font-bold text-ink text-sm">Payment Summary</h3>
+        <h3 className="font-bold font-display text-ink text-base">Payment Summary</h3>
         
         <div className="space-y-2 text-sm">
           <div className="flex justify-between text-muted">
@@ -193,7 +193,7 @@ export default function CartView({
         <button
           onClick={handleConfirm}
           disabled={loading || cart.length === 0}
-          className="w-full py-3 mt-2 rounded-xl bg-forest text-white font-bold text-base disabled:opacity-50 transition-all duration-180 active:scale-[0.98] hover:bg-forest-dark flex items-center justify-center gap-2 shadow-md shadow-forest/20"
+          className="w-full py-3 md:py-3.5 mt-2 rounded-full bg-forest text-white font-bold text-base disabled:opacity-50 transition-all duration-180 active:scale-[0.98] hover:bg-forest-dark flex items-center justify-center gap-2 shadow-md shadow-forest/20"
         >
           {loading ? (
             <>

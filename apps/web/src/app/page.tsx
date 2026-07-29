@@ -191,8 +191,7 @@ export default function Home() {
                 <h2 className="text-2xl md:text-4xl font-display font-bold text-ink">Menu Hari Ini</h2>
                 <p className="text-xs text-muted mt-2">
                   {lastUpdated && (
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-forest" />
+                    <span className="inline-flex items-center">
                       Diperbarui {elapsed < 60
                         ? `${elapsed} detik yang lalu`
                         : `${Math.floor(elapsed / 60)} menit yang lalu`}

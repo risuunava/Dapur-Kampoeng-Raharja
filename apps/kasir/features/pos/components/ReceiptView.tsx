@@ -34,29 +34,29 @@ export default function ReceiptView({
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 animate-fade-in">
       <div
-        className="bg-surface rounded-lg p-6 w-full max-w-sm border border-line"
+        className="bg-surface rounded-2xl p-6 w-full max-w-sm border border-line"
         style={{ boxShadow: "var(--shadow-card)" }}
       >
         <div className="text-center mb-4">
           <Receipt className="w-8 h-8 text-forest mx-auto mb-2" />
           <h2
-            className="text-lg font-semibold text-ink"
+            className="text-xl font-bold text-ink"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Dapur Kampoeng Raharja
           </h2>
-          <p className="text-xs text-muted">Struk Transaksi</p>
+          <p className="text-sm text-muted mt-1">Struk Transaksi</p>
         </div>
 
-        <div className="border-t border-line pt-4 space-y-2 mb-4">
+        <div className="border-t border-line/50 pt-4 space-y-2 mb-4">
           {receipt.items.map((item, i) => (
             <div key={i} className="flex items-center justify-between text-sm">
               <span className="text-ink">
                 {item.name}{" "}
-                <span className="text-muted">x{item.qty}</span>
+                <span className="text-muted font-medium">x{item.qty}</span>
               </span>
               <span
-                className="font-medium text-ink"
+                className="font-semibold text-ink"
                 style={{ fontVariantNumeric: "tabular-nums" }}
               >
                 {formatRupiah(item.price * item.qty)}
@@ -65,15 +65,15 @@ export default function ReceiptView({
           ))}
         </div>
 
-        <div className="border-t border-line pt-3 flex items-center justify-between">
+        <div className="border-t border-line/50 pt-4 flex items-center justify-between">
           <span
-            className="font-bold text-ink"
+            className="font-bold text-ink text-lg"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Total
           </span>
           <span
-            className="text-xl font-bold text-forest"
+            className="text-xl md:text-2xl font-bold text-forest"
             style={{
               fontFamily: "var(--font-display)",
               fontVariantNumeric: "tabular-nums",
@@ -83,17 +83,17 @@ export default function ReceiptView({
           </span>
         </div>
 
-        <div className="mt-4 p-3 rounded-md bg-forest/5 border border-line text-center">
-          <p className="text-xs text-muted mb-1">
+        <div className="mt-6 p-4 rounded-xl bg-forest/5 border border-forest/10 text-center">
+          <p className="text-xs text-muted font-medium mb-1.5">
             {receipt.invoice ? "Invoice" : "ID Transaksi"}
           </p>
           <p
-            className="text-sm font-bold text-ink"
+            className="text-sm font-bold text-ink tracking-wider"
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
             {receipt.invoice || receipt.id.slice(0, 8).toUpperCase()}
           </p>
-          <div className="flex items-center justify-center mt-2">
+          <div className="flex items-center justify-center mt-3">
             <StatusBadge status={receipt.sync_status} />
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function ReceiptView({
         {onRetry && (
           <button
             onClick={onRetry}
-            className="w-full mt-3 py-2.5 rounded-md border border-chili/30 text-chili font-semibold text-sm active:bg-chili/5 active:scale-[0.98] transition-all duration-180 flex items-center justify-center gap-2"
+            className="w-full mt-4 py-2.5 rounded-full border border-chili/30 text-chili font-bold text-sm hover:bg-chili/5 active:scale-[0.98] transition-all duration-180 flex items-center justify-center gap-2"
           >
             Coba Kirim Ulang
           </button>
@@ -109,9 +109,9 @@ export default function ReceiptView({
 
         <button
           onClick={onNewTransaction}
-          className="w-full mt-3 py-3 rounded-md bg-forest text-white font-semibold text-base transition-all duration-180 active:bg-forest-dark active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full mt-3 py-3 rounded-full bg-forest text-white font-bold text-base transition-all duration-180 hover:bg-forest-dark active:scale-[0.98] flex items-center justify-center gap-2 shadow-md shadow-forest/20"
         >
-          <PlusCircle className="w-4 h-4" />
+          <PlusCircle className="w-5 h-5" />
           Transaksi Baru
         </button>
       </div>

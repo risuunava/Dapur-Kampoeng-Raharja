@@ -51,10 +51,10 @@ export default function Sidebar({
                 <button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-180 text-sm font-semibold w-full text-left
+                  className={`flex items-center gap-3 px-5 py-3 rounded-full transition-all duration-180 text-sm font-semibold w-full text-left
                     ${isActive 
                       ? "bg-forest text-white shadow-md shadow-forest/20" 
-                      : "text-muted hover:bg-bg hover:text-ink"
+                      : "text-muted hover:bg-forest/5 hover:text-forest"
                     }
                   `}
                 >
@@ -75,7 +75,7 @@ export default function Sidebar({
         </div>
         <button
           onClick={onLogout}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-180 text-sm font-semibold w-full text-left text-chili hover:bg-chili/10"
+          className="flex items-center gap-3 px-5 py-3 rounded-full transition-all duration-180 text-sm font-semibold w-full text-left text-chili hover:bg-chili/10"
         >
           <LogOut className="w-5 h-5" />
           Keluar

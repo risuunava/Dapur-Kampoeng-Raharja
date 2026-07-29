@@ -7,7 +7,7 @@ import type { Menu } from "@dapur-kampoeng/types";
 import { ShoppingCart } from "lucide-react";
 import SearchInput from "../../../components/SearchInput";
 import CategoryChip from "../../../components/CategoryChip";
-import { MenuCard } from "@dapur-kampoeng/ui";
+import { MenuCard, type MenuItemData } from "@dapur-kampoeng/ui";
 
 interface CartItem {
   menu_id: string;
@@ -79,30 +79,30 @@ export default function MenuView({
     return true;
   });
 
-  function handleSelect(item: Menu) {
+  function handleSelect(item: MenuItemData) {
     if (item.status === "habis") return;
-    setCart(updateCart(cart, item));
+    setCart(updateCart(cart, item as Menu));
   }
 
   const totalItems = cart.reduce((s, i) => s + i.qty, 0);
   const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   return (
-    <div className="flex-1 flex flex-col p-6">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="flex-1 flex flex-col p-6 md:p-8">
+      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-display font-bold text-ink">Semua Menu</h2>
-          <p className="text-sm text-muted">Pilih menu untuk pesanan pelanggan</p>
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-ink">Semua Menu</h2>
+          <p className="text-sm md:text-base text-muted mt-1">Pilih menu untuk pesanan pelanggan</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="px-3 py-2 rounded-md border border-line text-sm text-muted hover:text-ink hover:border-forest transition-colors duration-180 disabled:opacity-50"
+            className="px-4 py-2.5 rounded-full border border-line bg-surface text-sm font-medium text-ink hover:text-forest hover:border-forest transition-colors duration-180 disabled:opacity-50 shadow-sm"
           >
             {refreshing ? "Memuat..." : "Muat ulang"}
           </button>
-          <div className="w-64">
+          <div className="w-full md:w-72">
             <SearchInput
               value={search}
               onChange={setSearch}
@@ -154,7 +154,7 @@ export default function MenuView({
           </div>
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-fade-in">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 animate-fade-in">
           {filtered.map((item) => (
             <MenuCard key={item.id} item={item} onSelect={handleSelect} />
           ))}
