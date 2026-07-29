@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { startSyncEngine, stopSyncEngine, subscribe, retryTransaksi } from "../../lib/sync";
 import { TransaksiLocal, getAllTransaksiLocal } from "../../lib/local-db";
 import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
+import BottomTabBar from "../../components/BottomTabBar";
 import LoginView from "../../features/auth/components/LoginView";
 import MenuView from "../../features/pos/components/MenuView";
 import CartView from "../../features/pos/components/CartView";
@@ -155,21 +157,38 @@ export default function KasirApp() {
     }
   }
 
+  const cartItemCount = cart.reduce((s, i) => s + i.qty, 0);
+
   return (
-    <div className="min-h-screen bg-bg flex flex-col md:flex-row overflow-hidden">
+    <div className="h-screen bg-bg flex overflow-hidden">
+      {/* Desktop Sidebar — hidden on mobile/tablet */}
       {view !== "login" && user && (
-        <Sidebar
-          isAdmin={user.role === "admin"}
-          isOnline={isOnline}
-          currentView={view}
-          onNavigate={handleNavigate}
-          onLogout={handleLogout}
-        />
+        <div className="hidden lg:flex h-full">
+          <Sidebar
+            isAdmin={user.role === "admin"}
+            isOnline={isOnline}
+            currentView={view}
+            onNavigate={handleNavigate}
+            onLogout={handleLogout}
+          />
+        </div>
       )}
 
-      <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0">
+        {/* Mobile/Tablet Header */}
         {view !== "login" && user && (
-          <header className="h-20 border-b border-line/50 flex items-center justify-between px-8 bg-bg/90 backdrop-blur-md shrink-0 hidden md:flex sticky top-0 z-50">
+          <div className="lg:hidden">
+            <Header
+              userName={user.name}
+              isOnline={isOnline}
+              onLogout={handleLogout}
+            />
+          </div>
+        )}
+
+        {/* Desktop Header */}
+        {view !== "login" && user && (
+          <header className="h-20 border-b border-line/50 flex items-center justify-between px-8 bg-bg/90 backdrop-blur-md shrink-0 hidden lg:flex sticky top-0 z-50">
             <div>
               <p className="text-sm text-muted font-medium">
                 {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -188,7 +207,8 @@ export default function KasirApp() {
           </header>
         )}
 
-        <div className="flex-1 flex overflow-hidden">
+        {/* Content + Cart */}
+        <div className="flex-1 flex overflow-hidden relative">
           {/* Middle Content */}
           <div className="flex-1 overflow-y-auto bg-bg flex flex-col">
             {view === "login" && (
@@ -269,7 +289,7 @@ export default function KasirApp() {
             </div>
           )}
 
-          {/* Mobile Cart View (Full Screen) */}
+          {/* Mobile Cart View (Full Screen) — hides bottom tab */}
           {view === "cart" && user && (
             <div className="absolute inset-0 bg-surface z-50 flex flex-col lg:hidden">
               <CartView
@@ -284,6 +304,16 @@ export default function KasirApp() {
             </div>
           )}
         </div>
+
+        {/* Bottom Tab Bar — mobile/tablet only */}
+        {view !== "login" && view !== "cart" && user && (
+          <BottomTabBar
+            currentView={view}
+            isAdmin={user.role === "admin"}
+            cartItemCount={cartItemCount}
+            onNavigate={handleNavigate}
+          />
+        )}
       </main>
     </div>
   );
