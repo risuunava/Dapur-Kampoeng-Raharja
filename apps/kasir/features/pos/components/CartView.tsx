@@ -101,7 +101,7 @@ export default function CartView({
       <div className="flex items-center gap-3 px-6 py-5 border-b border-line bg-surface">
         <button
           onClick={onBack}
-          className="lg:hidden w-8 h-8 flex items-center justify-center rounded-md text-muted hover:bg-line transition-colors duration-180 active:scale-95"
+          className="lg:hidden w-11 h-11 flex items-center justify-center rounded-md text-muted hover:bg-line transition-colors duration-180 active:scale-95"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -140,9 +140,9 @@ export default function CartView({
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => updateQty(item.menu_id, -1)}
-                className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full border border-line text-ink font-bold hover:bg-line active:scale-90 transition-all duration-180"
+                className="w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-full border border-line text-ink font-bold hover:bg-line active:scale-90 transition-all duration-180"
               >
-                <Minus className="w-3.5 h-3.5" />
+                <Minus className="w-4 h-4" />
               </button>
               <span
                 className="w-7 text-center font-semibold text-ink"
@@ -152,9 +152,9 @@ export default function CartView({
               </span>
               <button
                 onClick={() => updateQty(item.menu_id, 1)}
-                className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-turmeric text-forest-dark font-bold hover:bg-turmeric-deep active:scale-90 transition-all duration-180"
+                className="w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-turmeric text-forest-dark font-bold hover:bg-turmeric-deep active:scale-90 transition-all duration-180"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-4 h-4" />
               </button>
             </div>
 
@@ -193,7 +193,7 @@ export default function CartView({
         <button
           onClick={handleConfirm}
           disabled={loading || cart.length === 0}
-          className="w-full py-3 md:py-3.5 mt-2 rounded-full bg-forest text-white font-bold text-base disabled:opacity-50 transition-all duration-180 active:scale-[0.98] hover:bg-forest-dark flex items-center justify-center gap-2 shadow-md shadow-forest/20"
+          className="w-full py-4 mt-2 rounded-full bg-forest text-white font-bold text-base disabled:opacity-50 transition-all duration-180 active:scale-[0.98] hover:bg-forest-dark flex items-center justify-center gap-2 shadow-md shadow-forest/20"
         >
           {loading ? (
             <>

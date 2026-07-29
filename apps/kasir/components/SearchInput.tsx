@@ -21,7 +21,7 @@ export default function SearchInput({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full pl-9 pr-4 py-2.5 rounded-full border border-line bg-surface text-ink text-sm focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/30 transition-all duration-180"
+        className="w-full pl-9 pr-4 py-3 rounded-full border border-line bg-surface text-ink text-sm focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/30 transition-all duration-180 min-h-[44px]"
       />
     </div>
   );
