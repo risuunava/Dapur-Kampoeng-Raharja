@@ -41,7 +41,6 @@ export default function KasirApp() {
   const [view, setView] = useState<View>("login");
   const [user, setUser] = useState<UserInfo | null>(null);
   const [receipt, setReceipt] = useState<ReceiptData | null>(null);
-  const [isOnline, setIsOnline] = useState(true);
   const [syncStatuses, setSyncStatuses] = useState<Record<string, TransaksiLocal["sync_status"]>>({});
   const [history, setHistory] = useState<TransaksiLocal[]>([]);
 
@@ -67,19 +66,6 @@ export default function KasirApp() {
         sessionStorage.removeItem('user');
       }
     }
-  }, []);
-
-  // Network listener
-  useEffect(() => {
-    setIsOnline(navigator.onLine);
-    const on = () => setIsOnline(true);
-    const off = () => setIsOnline(false);
-    window.addEventListener("online", on);
-    window.addEventListener("offline", off);
-    return () => {
-      window.removeEventListener("online", on);
-      window.removeEventListener("offline", off);
-    };
   }, []);
 
   // Sync engine
@@ -166,7 +152,6 @@ export default function KasirApp() {
         <div className="hidden lg:flex h-full">
           <Sidebar
             isAdmin={user.role === "admin"}
-            isOnline={isOnline}
             currentView={view}
             onNavigate={handleNavigate}
             onLogout={handleLogout}
@@ -180,7 +165,6 @@ export default function KasirApp() {
           <div className="lg:hidden">
             <Header
               userName={user.name}
-              isOnline={isOnline}
               onLogout={handleLogout}
             />
           </div>

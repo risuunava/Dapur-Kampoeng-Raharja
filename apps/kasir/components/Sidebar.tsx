@@ -1,11 +1,9 @@
 "use client";
 
 import { LogOut, LayoutDashboard, ClipboardList, UtensilsCrossed, Store } from "lucide-react";
-import { ConnectionBadge } from "@dapur-kampoeng/ui";
 
 interface SidebarProps {
   isAdmin: boolean;
-  isOnline: boolean;
   currentView: string;
   onNavigate: (view: string) => void;
   onLogout: () => void;
@@ -13,7 +11,6 @@ interface SidebarProps {
 
 export default function Sidebar({
   isAdmin,
-  isOnline,
   currentView,
   onNavigate,
   onLogout,
@@ -69,10 +66,6 @@ export default function Sidebar({
 
       {/* Footer / Status */}
       <div className="p-6 border-t border-line/30 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-ink">Status</span>
-          <ConnectionBadge online={isOnline} />
-        </div>
         <button
           onClick={onLogout}
           className="flex items-center gap-3 px-5 py-3 rounded-full transition-all duration-180 text-sm font-semibold w-full text-left text-chili hover:bg-chili/10"

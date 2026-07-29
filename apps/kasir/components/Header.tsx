@@ -1,17 +1,14 @@
 "use client";
 
 import { LogOut } from "lucide-react";
-import { ConnectionBadge } from "@dapur-kampoeng/ui";
 
 interface HeaderProps {
   userName: string;
-  isOnline: boolean;
   onLogout: () => void;
 }
 
 export default function Header({
   userName,
-  isOnline,
   onLogout,
 }: HeaderProps) {
   return (
@@ -22,7 +19,6 @@ export default function Header({
           <span className="text-sm font-semibold truncate" style={{ fontFamily: "var(--font-display)" }}>
             Dapur Kampoeng
           </span>
-          <ConnectionBadge online={isOnline} />
         </div>
 
         <div className="flex items-center gap-2">
