@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Express } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -12,7 +12,7 @@ import authRoutes from './routes/auth';
 import dashboardRoutes from './routes/dashboard';
 import uploadRoutes from './routes/upload';
 
-const app = express();
+const app: Express = express();
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
@@ -51,4 +51,8 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/upload', uploadRoutes);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`API running on port ${PORT}`));
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => console.log(`API running on port ${PORT}`));
+}
+
+export default app;
