@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
-import { syncTransaksiToSheets } from '../services/sheets.service';
 import { authenticate, requireRole } from '../middleware/auth';
 import { getLocalDateString } from '@dapur-kampoeng/utils';
 
@@ -63,7 +62,7 @@ router.post('/', authenticate, requireRole('admin', 'kasir'), async (req: Reques
 
     res.status(201).json({ data });
 
-    syncTransaksiToSheets(data.id);
+    import('../services/sheets.service').then(m => m.syncTransaksiToSheets(data.id)).catch(() => {});
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'unknown error';
     res.status(500).json({ error: message });
