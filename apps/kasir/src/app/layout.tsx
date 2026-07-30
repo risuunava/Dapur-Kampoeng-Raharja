@@ -13,7 +13,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Kasir — Dapur Kampoeng Raharja",
+  title: "Kasir Dapur Kampoeng Raharja",
   description: "Aplikasi Kasir Dapur Kampoeng Raharja",
 };
 
