@@ -28,7 +28,11 @@ app.use(cors({
   },
 }));
 app.use(express.json());
+const publicPath = process.env.VERCEL ? path.join(__dirname, '../public') : path.join(__dirname, 'public');
+app.use(express.static(publicPath));
 
+app.get('/favicon.ico', (_req, res) => res.sendFile(path.join(publicPath, 'favicon.ico')));
+app.get('/favicon.png', (_req, res) => res.sendFile(path.join(publicPath, 'favicon.png')));
 app.get('/', (_req, res) => {
   res.json({
     name: 'Dapur Kampoeng API',
