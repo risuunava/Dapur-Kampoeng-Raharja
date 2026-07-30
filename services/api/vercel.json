@@ -1,5 +1,4 @@
 {
   "buildCommand": "cd ../.. && pnpm install",
-  "cleanUrls": true,
-  "nodeVersion": "22"
+  "cleanUrls": true
 }
