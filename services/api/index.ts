@@ -29,6 +29,14 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.get('/', (_req, res) => {
+  res.json({
+    name: 'Dapur Kampoeng API',
+    version: '1.0.0',
+    status: 'running'
+  });
+});
+
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 app.get('/health/db', async (_req, res) => {
