@@ -60,9 +60,14 @@ router.post('/', authenticate, requireRole('admin', 'kasir'), async (req: Reques
 
     if (error) return res.status(400).json({ error: error.message });
 
-    res.status(201).json({ data });
+    try {
+      const sheetsService = await import('../services/sheets.service');
+      await sheetsService.syncTransaksiToSheets(data.id);
+    } catch (syncErr) {
+      console.error('[API] Error syncing to sheets:', syncErr);
+    }
 
-    import('../services/sheets.service').then(m => m.syncTransaksiToSheets(data.id)).catch(() => {});
+    res.status(201).json({ data });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'unknown error';
     res.status(500).json({ error: message });
