@@ -18,9 +18,18 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
   : ['http://localhost:3000', 'http://localhost:3001'];
 
+// Selalu izinkan origin dari Capacitor (Android & iOS) dan localhost
+const capacitorOrigins = [
+  'capacitor://localhost',
+  'http://localhost',
+  'https://localhost',
+  'ionic://localhost',
+];
+
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || capacitorOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
