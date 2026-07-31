@@ -6,6 +6,19 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function toWib(iso: string): string {
+  return new Intl.DateTimeFormat('id-ID', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(new Date(iso));
+}
+
 async function retryAppend(
   rows: TransaksiRow[],
   maxRetries = 3
@@ -52,7 +65,7 @@ export async function syncTransaksiToSheets(transaksiId: string): Promise<void> 
     const kasirName = (data.kasir as { name?: string })?.name || data.kasir_id;
 
     const rows: TransaksiRow[] = items.map((item) => ({
-      waktu: data.created_at,
+      waktu: toWib(data.created_at),
       invoice: data.invoice || '',
       menu: item.name,
       qty: item.qty,
