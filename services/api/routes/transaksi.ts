@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
 import { authenticate, requireRole } from '../middleware/auth';
 import { getLocalDateString } from '@dapur-kampoeng/utils';
+import { syncTransaksiToSheets } from '../services/sheets.service';
 
 const router: ReturnType<typeof Router> = Router();
 
@@ -61,8 +62,7 @@ router.post('/', authenticate, requireRole('admin', 'kasir'), async (req: Reques
     if (error) return res.status(400).json({ error: error.message });
 
     try {
-      const sheetsService = await import('../services/sheets.service');
-      await sheetsService.syncTransaksiToSheets(data.id);
+      await syncTransaksiToSheets(data.id);
     } catch (syncErr) {
       console.error('[API] Error syncing to sheets:', syncErr);
     }

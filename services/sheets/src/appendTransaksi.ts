@@ -35,7 +35,10 @@ export async function appendTransaksiToSheet(row: TransaksiRow): Promise<void> {
 }
 
 export async function appendBatchToSheet(rows: TransaksiRow[]): Promise<void> {
-  if (!SPREADSHEET_ID || rows.length === 0) return;
+  if (!SPREADSHEET_ID) {
+    throw new Error('GOOGLE_SHEETS_SPREADSHEET_ID belum diatur di Vercel Environment Variables');
+  }
+  if (rows.length === 0) return;
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
